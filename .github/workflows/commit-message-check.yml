@@ -1,0 +1,27 @@
+name: Commit Message Validation
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  lint-commit-message:
+    name: Lint Commit Messages
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # 전체 Git 히스토리를 가져옵니다.
+
+      - name: Install Commitlint
+        run: npm install @commitlint/{config-conventional,cli} --save-dev
+
+      - name: Lint commit message
+        run: |
+          if git rev-parse --verify HEAD >/dev/null 2>&1 && git rev-parse --verify origin/main >/dev/null 2>&1; then
+            npx commitlint --from=$(git merge-base HEAD origin/main) --to=HEAD
+          else
+            echo "No valid commit history to validate." && exit 1
+          fi
