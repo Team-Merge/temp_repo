@@ -19,9 +19,4 @@ jobs:
         run: npm install @commitlint/{config-conventional,cli} --save-dev
 
       - name: Lint commit message
-        run: |
-          if git rev-parse --verify HEAD >/dev/null 2>&1 && git rev-parse --verify origin/main >/dev/null 2>&1; then
-            npx commitlint --from=$(git merge-base HEAD origin/main) --to=HEAD
-          else
-            echo "No valid commit history to validate." && exit 1
-          fi
+        run: npx commitlint --from=HEAD~1 --to=HEAD
