@@ -3,7 +3,7 @@ module.exports = {
   rules: {
     'type-enum': [2, 'always', ['feat', 'fix', 'docs', 'style', 'refactor', 'test', 'chore']],
     'header-max-length': [2, 'always', 72],
-    'type-empty': [0], // type 비어 있어도 허용
-    'subject-empty': [0], // subject 비어 있어도 허용
+    'type-empty': [2, 'never'], // type이 비어 있으면 실패
+    'subject-empty': [2, 'never'], // subject가 비어 있으면 실패
   },
 };
