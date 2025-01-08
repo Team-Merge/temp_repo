@@ -6,7 +6,7 @@ echo "DEBUG: Commit message => $message"
 
 headerPattern="^(feat|fix|build|chore|ci|docs|style|refactor|test|perf)(\([^\)]+\))?:[ ]{1}.{1,50}$"
 bodyPattern="^(|.+)$"  # Allow single-line or empty Body
-footerPattern="^(|\s(close|fixes|resolves) #[0-9]+)$"  # Footer is optional
+footerPattern="^(close|fixes|resolves) #[0-9]+$"  # Footer must match specific format
 
 # Header, Body, Footer 분리
 header=$(echo "$message" | awk 'NR==1')  # 첫 번째 줄: Header
@@ -16,18 +16,19 @@ footer=$(echo "$message" | awk '/^close|fixes|resolves/ {print}')  # 마지막 �
 # 공백 및 줄바꿈 제거
 header=$(echo "$header" | sed 's/^[ \t]*//;s/[ \t]*$//')
 body=$(echo "$body" | sed 's/^[ \t]*//;s/[ \t]*$//')  # 공백 제거
-footer=$(echo "$footer" | sed 's/^[ \t]*//;s/[ \t]*$//')
+footer=$(echo "$footer" | sed 's/^[ \t]*//;s/[ \t]*$//')  # 공백 제거
 
 echo "DEBUG: Header Value => [$header]"
 echo "DEBUG: Body Raw Value => [$body]"
 echo "DEBUG: Footer Value => [$footer]"
 echo "DEBUG: Body Pattern => $bodyPattern"
+echo "DEBUG: Footer Pattern => $footerPattern"
 
 # Debugging the pattern matching
-if [[ $body =~ $bodyPattern ]]; then
-  echo "DEBUG: Body matches the pattern!"
+if [[ $footer =~ $footerPattern ]]; then
+  echo "DEBUG: Footer matches the pattern!"
 else
-  echo "DEBUG: Body does NOT match the pattern!"
+  echo "DEBUG: Footer does NOT match the pattern!"
 fi
 
 # Header 검증
