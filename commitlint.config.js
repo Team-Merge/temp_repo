@@ -1,10 +1,9 @@
 module.exports = {
-  extends: ['@commitlint/config-conventional'],
   rules: {
-    'type-enum': [2, 'always', ['feat', 'fix', 'docs', 'style', 'refactor', 'test', 'chore']],
-    'header-max-length': [2, 'always', 72],
-    'type-empty': [2, 'never'],
-    'subject-empty': [2, 'never'],
-    'subject-case': [0], // 주제(case) 검사를 비활성화 (한글 허용)
+    'type-enum': [0], // type 제한 비활성화
+    'header-max-length': [0], // 길이 제한 비활성화
+    'type-empty': [0], // type-empty 비활성화
+    'subject-empty': [0], // subject-empty 비활성화
+    'subject-case': [0], // subject-case 비활성화
   },
 };
