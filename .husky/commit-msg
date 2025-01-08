@@ -18,11 +18,11 @@ header=$(echo "$header" | sed 's/^[ \t]*//;s/[ \t]*$//')
 body=$(echo "$body" | sed 's/^[ \t]*//;s/[ \t]*$//')  # 공백 제거
 footer=$(echo "$footer" | sed 's/^[ \t]*//;s/[ \t]*$//')  # 공백 제거
 
-echo "DEBUG: Header Value => [$header]"
-echo "DEBUG: Body Raw Value => [$body]"
-echo "DEBUG: Footer Value => [$footer]"
-echo "DEBUG: Body Pattern => $bodyPattern"
-echo "DEBUG: Footer Pattern => $footerPattern"
+# echo "DEBUG: Header Value => [$header]"
+# echo "DEBUG: Body Raw Value => [$body]"
+# echo "DEBUG: Footer Value => [$footer]"
+# echo "DEBUG: Body Pattern => $bodyPattern"
+# echo "DEBUG: Footer Pattern => $footerPattern"
 
 # Debugging the pattern matching
 if [[ $footer =~ $footerPattern ]]; then
