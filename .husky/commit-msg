@@ -5,7 +5,7 @@ message="$(cat "$1")"
 
 # 정규 표현식을 사용하여 메시지 검사
 # Header: 타입(스코프): 주제
-headerPattern="^(feat|fix|build|chore|ci|docs|style|refactor|test|perf)(\([^\)]+\))?:\s?.{0,50}$"
+headerPattern="^(feat|fix|build|chore|ci|docs|style|refactor|test|perf)(\([^\)]+\))?:\s.{1,50}$"
 # Body: 상세 설명 (선택적)
 bodyPattern="^(|\s.{1,})$"
 # Footer: 참조 정보 (선택적)
