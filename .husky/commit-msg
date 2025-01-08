@@ -5,7 +5,7 @@ message=$(echo "$message" | tr -d '\r')  # Windows 캐리지 리턴 제거
 echo "DEBUG: Commit message => $message"
 
 headerPattern="^(feat|fix|build|chore|ci|docs|style|refactor|test|perf)(\([^\)]+\))?:[ ]{1}.{1,50}$"
-bodyPattern="^(|\s.*)$"  # Allow multi-line Body
+bodyPattern="^(|.+)$"  # Allow single-line or empty Body
 footerPattern="^(|\s(close|fixes|resolves) #[0-9]+)$"  # Footer is optional
 
 # Header, Body, Footer 분리
@@ -15,12 +15,20 @@ footer=$(echo "$message" | awk '/^close|fixes|resolves/ {print}')  # 마지막 �
 
 # 공백 및 줄바꿈 제거
 header=$(echo "$header" | sed 's/^[ \t]*//;s/[ \t]*$//')
-body=$(echo "$body" | tr '\n' ' ' | sed 's/^[ \t]*//;s/[ \t]*$//')
+body=$(echo "$body" | sed 's/^[ \t]*//;s/[ \t]*$//')  # 공백 제거
 footer=$(echo "$footer" | sed 's/^[ \t]*//;s/[ \t]*$//')
 
 echo "DEBUG: Header Value => [$header]"
-echo "DEBUG: Body Value => [$body]"
+echo "DEBUG: Body Raw Value => [$body]"
 echo "DEBUG: Footer Value => [$footer]"
+echo "DEBUG: Body Pattern => $bodyPattern"
+
+# Debugging the pattern matching
+if [[ $body =~ $bodyPattern ]]; then
+  echo "DEBUG: Body matches the pattern!"
+else
+  echo "DEBUG: Body does NOT match the pattern!"
+fi
 
 # Header 검증
 if ! [[ $header =~ $headerPattern ]]; then
