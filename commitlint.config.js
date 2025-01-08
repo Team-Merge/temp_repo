@@ -15,6 +15,7 @@ module.exports = {
     'footer-leading-blank': [1, 'always'], // Footer 앞에 빈 줄이 있어야 함
     'footer-max-line-length': [0], // Footer 줄 길이 제한 없음
     'references-empty': [0], // Footer의 참조가 없어도 허용
-    'footer-pattern': [2, 'always', /^(close|fixes|resolves) #[0-9]+$/], // Footer는 특정 형식이어야 함
+    // Footer 내용 검증
+    'subject-exclamation-mark': [2, 'never'], // Footer 내용이 "!"로 끝나면 안 됨
   },
 };
