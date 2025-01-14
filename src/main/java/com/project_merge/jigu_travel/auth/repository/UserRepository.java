@@ -1,6 +1,6 @@
-package com.project_merge.jigu_travel.repository;
+package com.project_merge.jigu_travel.auth.repository;
 
-import com.project_merge.jigu_travel.model.User;
+import com.project_merge.jigu_travel.auth.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
