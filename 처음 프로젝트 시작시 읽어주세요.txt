@@ -1,3 +1,5 @@
 npm install
 
 을 cmd에서 실행해주세요
+
+npm install오류가 나오시는 분께서는 node.js 설치하시면 됩니다.
