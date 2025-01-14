@@ -1,3 +1,3 @@
 INSERT INTO users (id, username, password, role) VALUES
-(1, 'admin', '$2a$10$OAuy2iBOGPFLJimjSxjHS.GV924yaNZUi58hAtJ0.IIljqIA7NtK2', 'ROLE_ADMIN'),
-(2, 'user', '$2a$10$FrbKA1e7gJEkNdZGsEfFsegeco6bqI9E.tnwiO7H6dl3f4pmmqJge', 'ROLE_USER');
+(1, 'admin', '$2a$10$QdvanZG7HxKRaVEL1beejOq1HvqtAFSmAacKzOxrJmvbd/Uyin8Sq', 'ROLE_ADMIN'),
+(2, 'user', '$2a$10$M7J6H7KYqkvOyWnCPkYyeu4RwcoZWD1imtgvSjdSyrAYFuawuVS2C', 'ROLE_USER');

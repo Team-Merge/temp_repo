@@ -1,7 +1,7 @@
-package com.project_merge.jigu_travel.service;
+package com.project_merge.jigu_travel.auth.service;
 
-import com.project_merge.jigu_travel.model.User;
-import com.project_merge.jigu_travel.repository.UserRepository;
+import com.project_merge.jigu_travel.auth.model.User;
+import com.project_merge.jigu_travel.auth.repository.UserRepository;
 import org.springframework.security.core.userdetails.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;

@@ -1,10 +1,10 @@
-package com.project_merge.jigu_travel.model;
+package com.project_merge.jigu_travel.auth.model;
 
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "users") // 테이블 이름을 "users"로 설정
+@Table(name = "users")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -22,5 +22,5 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    private String role; // ROLE_USER or ROLE_ADMIN
+    private String role;
 }
