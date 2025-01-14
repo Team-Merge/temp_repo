@@ -11,3 +11,5 @@ public class PasswordEncoderUtil {
         System.out.println("user password: " + encoder.encode("1234"));
     }
 }
+
+//여러분 이거는 테스트 할려고 제가 그냥 만든겁니다...혹시 혹시라도 테스트 하고 싶으신 분들은 이것만 돌려보시면 됩니다. 격리된 코드에요
