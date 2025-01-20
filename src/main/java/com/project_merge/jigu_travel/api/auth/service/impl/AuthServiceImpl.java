@@ -83,10 +83,24 @@ public class AuthServiceImpl implements AuthService {
 
     @Transactional
     @Override
-    public void logout(String loginId) {
+    public void logout(String token) {
+        String loginId = jwtUtil.validateToken(token);
+
+        if (loginId == null) {
+            throw new CustomException(ErrorCode.INVALID_TOKEN);
+        }
+
+        System.out.println("로그아웃 요청한 사용자 ID: " + loginId);
+
         User user = userRepository.findByLoginId(loginId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        authRepository.deleteByUser(user);
+        Auth auth = authRepository.findByAccessToken(token)
+                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_TOKEN));
+
+        System.out.println("로그아웃 완료 - 사용자: " + user.getLoginId());
+
+        // 🔥 사용자와 관련된 토큰 삭제 (DB에서 삭제)
+        authRepository.invalidateAccessToken(token);
     }
 }
