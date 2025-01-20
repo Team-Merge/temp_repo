@@ -1,15 +1,33 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>호오오오오옴</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <meta charset="UTF-8">
+    <title>홈 페이지</title>
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-<div class="container">
-    <h1>안녕하세요 <span th:text="${username}">User</span>!</h1>
-    <p>
-        <a th:href="@{/logout}">Logout</a>
-    </p>
+
+<h1 id="username-display">손님님 안녕하세요!</h1>
+
+<p>홈 페이지에 오신 것을 환영합니다.</p>
+
+<div id="login-section">
+    <a href="/auth/login">로그인</a>
 </div>
+
+<div id="logout-section" style="display: none;">
+    <form id="logoutForm" action="/logout" method="post">
+        <button type="submit">로그아웃</button>
+    </form>
+</div>
+
+<script src="/js/home.js"></script>
+
+<script>
+    document.getElementById("logoutForm").addEventListener("submit", function () {
+        localStorage.removeItem("jwt");
+    });
+</script>
+
 </body>
 </html>
