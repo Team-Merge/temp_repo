@@ -2,6 +2,7 @@ package com.project_merge.jigu_travel.api.auth.security;
 
 import com.project_merge.jigu_travel.api.auth.security.jwt.JwtAuthenticationFilter;
 import com.project_merge.jigu_travel.api.auth.security.jwt.JwtUtil;
+import com.project_merge.jigu_travel.api.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +24,7 @@ import java.util.List;
 public class SecurityConfig {
 
     private final JwtUtil jwtUtil;
+    private final UserService userService; // UserService 주입
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -38,9 +40,10 @@ public class SecurityConfig {
                         .requestMatchers("/login", "/register").permitAll()
                         .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
                         .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/user-info").permitAll()
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(new JwtAuthenticationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtAuthenticationFilter(jwtUtil, userService), UsernamePasswordAuthenticationFilter.class) // UserService 추가
                 .logout(logout -> logout
                         .logoutUrl("/auth/logout")
                         .logoutSuccessUrl("/home")
