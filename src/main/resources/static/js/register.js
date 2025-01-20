@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         console.log("회원가입 데이터:", formData);
 
-        fetch("/auth/register", {
+        fetch("/api/auth/register", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

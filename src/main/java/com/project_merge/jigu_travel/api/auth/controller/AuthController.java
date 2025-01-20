@@ -15,7 +15,7 @@ import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
 
     private final AuthService authService;
@@ -43,13 +43,17 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout(@RequestHeader("Authorization") String token) {
+        System.out.println("로그아웃 요청 수신");
         try {
             if (token.startsWith("Bearer ")) {
                 token = token.substring(7); // "Bearer " 제거
             }
+            System.out.println("추출된 JWT 토큰: " + token);
+
             authService.logout(token);
             return ResponseEntity.ok(Map.of("message", "로그아웃 성공!"));
         } catch (CustomException e) {
+            System.out.println("로그아웃 실패: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
         }
     }
