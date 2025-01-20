@@ -1,5 +1,8 @@
 package com.project_merge.jigu_travel.api.auth.security.jwt;
 
+import com.project_merge.jigu_travel.api.auth.model.CustomUserDetails;
+import com.project_merge.jigu_travel.api.user.model.User;
+import com.project_merge.jigu_travel.api.user.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -7,8 +10,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -20,6 +21,7 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
+    private final UserService userService; // UserService 주입
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -49,10 +51,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (loginId != null) {
                 System.out.println("드디어 성공: " + loginId);
 
-                UserDetails userDetails = User.withUsername(loginId)
-                        .password("")
-                        .roles("USER")
-                        .build();
+                // UserService를 사용하여 User 객체를 조회
+                User user = userService.findByLoginId(loginId)
+                        .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다: " + loginId));
+
+                // CustomUserDetails로 UserDetails 생성
+                CustomUserDetails userDetails = new CustomUserDetails(user);
 
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
