@@ -19,14 +19,20 @@ import java.util.UUID;
 public class Board extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "board_id")
-    private Integer boardId;
+    private Long boardId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Column(name = "title")
+    private String title;
+
     @Column(name = "content")
     private String content;
+
+    @Column(name = "likes")
+    private Long likes;
 }
