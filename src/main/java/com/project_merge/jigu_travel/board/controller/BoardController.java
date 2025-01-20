@@ -1,8 +1,10 @@
 package com.project_merge.jigu_travel.board.controller;
 
+import com.project_merge.jigu_travel.board.dto.requestDto.BoardPostsRequestDto;
 import com.project_merge.jigu_travel.board.dto.responseDto.BoardResponseDto;
 import com.project_merge.jigu_travel.board.service.BoardServiceImpl;
 import com.project_merge.jigu_travel.global.common.BaseResponse;
+import com.project_merge.jigu_travel.global.common.CommonResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,9 +34,23 @@ public class BoardController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(BaseResponse.<Page<BoardResponseDto>>builder()
                         .code(HttpStatus.OK.value())
-                        .data(boardServiceImpl.getBoardList(page, size))
+                        .data(boardPage)
                         .build());
     }
 
-//    @PostMapping("/posts")
+    /**
+     *
+     * @param boardPostsRequestDto
+     * @return ResponseEntity<BaseResponse<BoardPostsResponseDto>>
+     */
+    @PostMapping("/posts")
+    @ResponseBody
+    public ResponseEntity<BaseResponse<CommonResponseDto>> addBoard(@RequestBody BoardPostsRequestDto boardPostsRequestDto) {
+        CommonResponseDto commonResponseDto = boardServiceImpl.createBoard(boardPostsRequestDto);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(BaseResponse.<CommonResponseDto>builder()
+                        .code(HttpStatus.OK.value())
+                        .data(commonResponseDto)
+                        .build());
+    }
 }

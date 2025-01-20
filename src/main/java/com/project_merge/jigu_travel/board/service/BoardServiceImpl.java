@@ -1,8 +1,12 @@
 package com.project_merge.jigu_travel.board.service;
 
+import com.project_merge.jigu_travel.auth.model.User;
+import com.project_merge.jigu_travel.auth.repository.UserRepository;
+import com.project_merge.jigu_travel.board.dto.requestDto.BoardPostsRequestDto;
 import com.project_merge.jigu_travel.board.dto.responseDto.BoardResponseDto;
 import com.project_merge.jigu_travel.board.entity.Board;
 import com.project_merge.jigu_travel.board.repository.BoardJpaRepository;
+import com.project_merge.jigu_travel.global.common.CommonResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,6 +18,9 @@ public class BoardServiceImpl implements BoardService {
 
     @Autowired
     private BoardJpaRepository boardJpaRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     public Page<BoardResponseDto> getBoardList(int page, int size) {
 
@@ -28,5 +35,22 @@ public class BoardServiceImpl implements BoardService {
                 .content(board.getContent())
                 .likes(board.getLikes())
                 .build());
+    }
+
+    @Override
+    public CommonResponseDto createBoard(BoardPostsRequestDto boardPostsRequestDto) {
+        User user = userRepository.findById(userId);
+        Board newBoard = Board.builder()
+                .user(user)
+                .title(boardPostsRequestDto.getTitle())
+                .content(boardPostsRequestDto.getContent())
+                .likes(0L)
+                .build();
+
+        boardJpaRepository.save(newBoard);
+
+        return CommonResponseDto.builder()
+                .message("SUCCESS")
+                .build();
     }
 }
