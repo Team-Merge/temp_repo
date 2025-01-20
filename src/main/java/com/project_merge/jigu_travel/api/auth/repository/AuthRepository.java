@@ -11,6 +11,11 @@ import java.util.Optional;
 
 public interface AuthRepository extends JpaRepository<Auth, Long> {
 
+    @Modifying
+    @Transactional
+    @Query("UPDATE Auth a SET a.accessToken = 'INVALIDATED' WHERE a.accessToken = :accessToken")
+    void invalidateAccessToken(@Param("accessToken") String accessToken);
+
     @Modifying  // DELETE 쿼리 실행 시 필수
     @Transactional  // 트랜잭션 추가
     @Query("DELETE FROM Auth a WHERE a.user = :user")  // 명시적 JPQL 사용
