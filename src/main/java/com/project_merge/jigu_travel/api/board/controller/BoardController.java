@@ -2,7 +2,9 @@ package com.project_merge.jigu_travel.api.board.controller;
 
 
 import com.project_merge.jigu_travel.api.board.dto.reponseDto.BoardResponseDto;
+import com.project_merge.jigu_travel.api.board.dto.reponseDto.BoardUpdateRequestDto;
 import com.project_merge.jigu_travel.api.board.dto.requestDto.BoardPostsRequestDto;
+import com.project_merge.jigu_travel.api.board.dto.requestDto.BoardUpdateResponseDto;
 import com.project_merge.jigu_travel.api.board.service.BoardServiceImpl;
 import com.project_merge.jigu_travel.global.common.BaseResponse;
 import com.project_merge.jigu_travel.global.common.CommonResponseDto;
@@ -55,6 +57,23 @@ public class BoardController {
                 .body(BaseResponse.<CommonResponseDto>builder()
                         .code(HttpStatus.OK.value())
                         .data(commonResponseDto)
+                        .build());
+    }
+
+    /**
+     *
+     * @param boardUpdateRequestDto
+     * @return ResponseEntity<BaseResponse<BoardUpdateResponseDto>>
+     */
+    @PatchMapping("update")
+    @ResponseBody
+    public ResponseEntity<BaseResponse<BoardUpdateResponseDto>> updateBoard(@RequestHeader("Authorization") String accessToken,
+                                                                            @RequestBody BoardUpdateRequestDto boardUpdateRequestDto) {
+        BoardUpdateResponseDto boardUpdateResponseDto = boardServiceImpl.modifyBoard(accessToken, boardUpdateRequestDto);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(BaseResponse.<BoardUpdateResponseDto>builder()
+                        .code(HttpStatus.OK.value())
+                        .data(boardUpdateResponseDto)
                         .build());
     }
 
