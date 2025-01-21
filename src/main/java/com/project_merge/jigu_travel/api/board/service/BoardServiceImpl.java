@@ -57,4 +57,19 @@ public class BoardServiceImpl implements BoardService {
                 .message("SUCCESS")
                 .build();
     }
+
+    @Override
+    public CommonResponseDto boardDeletion(String accessToken, Long boardId) {
+        User user = userRepository.findById(userService.getCurrentUserUUID()).orElseThrow(() -> new IllegalArgumentException());
+        Board board = boardJpaRepository.findById(boardId).orElseThrow(() -> new IllegalArgumentException());
+        if(!user.getUserId().equals(board.getUser().getUserId())) {
+            throw new IllegalArgumentException();
+        }
+
+        boardJpaRepository.delete(board);
+
+        return CommonResponseDto.builder()
+                .message("SUCCESS")
+                .build();
+    }
 }
