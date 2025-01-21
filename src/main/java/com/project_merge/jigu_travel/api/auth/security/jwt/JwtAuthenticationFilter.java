@@ -46,6 +46,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (token != null && token.startsWith("Bearer ")) {
             token = token.substring(7);
+
+            if (jwtUtil.isTokenExpired(token)) {
+                System.out.println("JWT 만료됨. 401 반환");
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "JWT 만료됨");
+                return; // 필터 체인 중단 (요청을 더 이상 진행하지 않음)
+            }
+
             String loginId = jwtUtil.validateToken(token);
 
             if (loginId != null) {
@@ -66,7 +73,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
                 System.out.println("현재 인증 정보: " + SecurityContextHolder.getContext().getAuthentication());
             } else {
-                System.out.println("아니 왜 실패야...살려줘요");
+                System.out.println("토큰 검증 실패! 로그인 ID 없음");
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "JWT 검증 실패");
+                return;
             }
         } else {
             System.out.println("비상! 토큰 없다!! 비상!: " + requestURI);
