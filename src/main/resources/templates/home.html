@@ -16,18 +16,12 @@
 </div>
 
 <div id="logout-section" style="display: none;">
-    <form id="logoutForm" action="/logout" method="post">
+    <form id="logoutForm" action="/auth/logout" method="post">
         <button type="submit">로그아웃</button>
     </form>
 </div>
 
-<script src="/js/home.js"></script>
-
-<script>
-    document.getElementById("logoutForm").addEventListener("submit", function () {
-        localStorage.removeItem("jwt");
-    });
-</script>
+<script type="module" src="/js/home.js"></script>
 
 </body>
 </html>
