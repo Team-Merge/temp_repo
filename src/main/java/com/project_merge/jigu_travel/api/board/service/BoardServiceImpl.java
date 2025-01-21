@@ -1,6 +1,8 @@
 package com.project_merge.jigu_travel.api.board.service;
 
 import com.project_merge.jigu_travel.api.board.dto.reponseDto.BoardResponseDto;
+import com.project_merge.jigu_travel.api.board.dto.reponseDto.BoardUpdateRequestDto;
+import com.project_merge.jigu_travel.api.board.dto.requestDto.BoardUpdateResponseDto;
 import com.project_merge.jigu_travel.api.board.entity.Board;
 import com.project_merge.jigu_travel.api.board.repository.BoardJpaRepository;
 import com.project_merge.jigu_travel.api.user.model.User;
@@ -55,6 +57,29 @@ public class BoardServiceImpl implements BoardService {
 
         return CommonResponseDto.builder()
                 .message("SUCCESS")
+                .build();
+    }
+
+    @Override
+    public BoardUpdateResponseDto modifyBoard(String accessToken, BoardUpdateRequestDto boardUpdateRequestDto) {
+        User user = userRepository.findById(userService.getCurrentUserUUID()).orElseThrow(() -> new IllegalArgumentException());
+        Board board = boardJpaRepository.findById(boardUpdateRequestDto.getBoardId()).orElseThrow(() -> new IllegalArgumentException());
+        if(!user.getUserId().equals(board.getUser().getUserId())) {
+            throw new IllegalArgumentException();
+        }
+
+        Board updateBoard = Board.builder()
+                .boardId(board.getBoardId())
+                .user(board.getUser())
+                .title(boardUpdateRequestDto.getTitle())
+                .content(boardUpdateRequestDto.getContent())
+                .likes(board.getLikes())
+                .build();
+        boardJpaRepository.save(updateBoard);
+
+        return BoardUpdateResponseDto.builder()
+                .title(boardUpdateRequestDto.getTitle())
+                .content(boardUpdateRequestDto.getContent())
                 .build();
     }
 
