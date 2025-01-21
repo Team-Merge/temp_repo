@@ -57,4 +57,21 @@ public class BoardController {
                         .data(commonResponseDto)
                         .build());
     }
+
+    /**
+     *
+     * @param boardId
+     * @return ResponseEntity<BaseResponse<CommonResponseDto>>
+     */
+    @DeleteMapping("/deletion")
+    @ResponseBody
+    public ResponseEntity<BaseResponse<CommonResponseDto>> deleteBoard(@RequestHeader("Authorization") String accessToken,
+                                                                       @RequestParam Long boardId) {
+        CommonResponseDto commonResponseDto = boardServiceImpl.boardDeletion(accessToken, boardId);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(BaseResponse.<CommonResponseDto>builder()
+                        .code(HttpStatus.OK.value())
+                        .data(commonResponseDto)
+                        .build());
+    }
 }
