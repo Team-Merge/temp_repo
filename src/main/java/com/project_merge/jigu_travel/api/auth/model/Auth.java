@@ -44,7 +44,7 @@ public class Auth {
     @Column
     private LocalDateTime updatedAt;
 
-    // ✅ updatedAt 자동 갱신
+    // updatedAt 자동 갱신
     @PreUpdate
     public void preUpdate() {
         this.updatedAt = LocalDateTime.now();

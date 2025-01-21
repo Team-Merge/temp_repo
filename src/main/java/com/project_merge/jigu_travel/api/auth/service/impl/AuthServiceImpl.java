@@ -18,8 +18,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import java.util.Date;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @RequiredArgsConstructor
 @Service
@@ -83,10 +84,53 @@ public class AuthServiceImpl implements AuthService {
 
     @Transactional
     @Override
-    public void logout(String loginId) {
+    public void logout(String token) {
+        String loginId = jwtUtil.validateToken(token);
+
+        if (loginId == null) {
+            throw new CustomException(ErrorCode.INVALID_TOKEN);
+        }
+
+        System.out.println("로그아웃 요청한 사용자 ID: " + loginId);
+
         User user = userRepository.findByLoginId(loginId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        authRepository.deleteByUser(user);
+        Auth auth = authRepository.findByAccessToken(token)
+                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_TOKEN));
+
+        System.out.println("로그아웃 완료 - 사용자: " + user.getLoginId());
+
+        // 사용자와 관련된 토큰 삭제 (DB에서 삭제)
+        authRepository.invalidateAccessToken(token);
+        authRepository.invalidateRefreshToken(auth.getRefreshToken());
+    }
+
+    @Override
+    public String refreshAccessToken(String refreshToken) {
+        System.out.println("Refresh Token을 사용하여 Access Token 갱신 시도");
+
+        if (jwtUtil.isTokenExpired(refreshToken)) {
+            throw new CustomException(ErrorCode.INVALID_TOKEN);
+        }
+
+        String loginId = jwtUtil.validateToken(refreshToken);
+        if (loginId == null) {
+            throw new CustomException(ErrorCode.INVALID_TOKEN);
+        }
+
+        Auth auth = authRepository.findByRefreshToken(refreshToken)
+                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_TOKEN));
+
+        String newAccessToken = jwtUtil.generateToken(loginId);
+
+        LocalDateTime now = LocalDateTime.now(ZoneId.systemDefault());
+        auth.setAccessToken(newAccessToken);
+        auth.setUpdatedAt(now);
+        authRepository.save(auth);
+
+        System.out.println("새로운 Access Token 발급 완료 및 저장: " + newAccessToken);
+
+        return newAccessToken;
     }
 }

@@ -3,6 +3,7 @@ package com.project_merge.jigu_travel.api.auth.security;
 import com.project_merge.jigu_travel.api.auth.security.jwt.JwtAuthenticationFilter;
 import com.project_merge.jigu_travel.api.auth.security.jwt.JwtUtil;
 import com.project_merge.jigu_travel.api.user.service.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,11 +39,18 @@ public class SecurityConfig {
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers("/auth/login", "/auth/register").permitAll()
                         .requestMatchers("/login", "/register").permitAll()
-                        .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/images/**", "/favicon.ico", "/static/**").permitAll()
                         .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/user-info").permitAll()
                         .requestMatchers("/board/**").permitAll()
                         .anyRequest().authenticated()
+                )
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            System.out.println("인증 실패 - 401 Unauthorized 반환");
+                            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+                        })
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(jwtUtil, userService), UsernamePasswordAuthenticationFilter.class) // UserService 추가
                 .logout(logout -> logout

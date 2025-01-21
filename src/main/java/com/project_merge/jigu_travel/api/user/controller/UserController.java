@@ -22,7 +22,9 @@ public class UserController {
 
     @GetMapping("/me")
     public ResponseEntity<BaseResponse<UserDto>> getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
+        System.out.println("테스트 사용자");
         if (userDetails == null) {
+            System.out.println("테스트 사용자2");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(new BaseResponse<>(401, "인증되지 않은 사용자", null));
         }
