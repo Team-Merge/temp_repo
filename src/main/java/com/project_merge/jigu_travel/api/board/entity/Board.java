@@ -1,18 +1,18 @@
 package com.project_merge.jigu_travel.api.board.entity;
 
+
+
 import com.project_merge.jigu_travel.api.user.model.User;
 import com.project_merge.jigu_travel.global.entity.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.UUID;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Getter
 @Setter
 @Table(name = "board")

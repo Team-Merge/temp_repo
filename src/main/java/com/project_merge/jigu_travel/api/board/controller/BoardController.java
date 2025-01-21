@@ -1,8 +1,11 @@
 package com.project_merge.jigu_travel.api.board.controller;
 
+
 import com.project_merge.jigu_travel.api.board.dto.reponseDto.BoardResponseDto;
+import com.project_merge.jigu_travel.api.board.dto.requestDto.BoardPostsRequestDto;
 import com.project_merge.jigu_travel.api.board.service.BoardServiceImpl;
 import com.project_merge.jigu_travel.global.common.BaseResponse;
+import com.project_merge.jigu_travel.global.common.CommonResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,15 +30,31 @@ public class BoardController {
 
     @GetMapping("/list")
     @ResponseBody
-    public ResponseEntity<BaseResponse<Page<BoardResponseDto>>> getAllBoard(@RequestParam(defaultValue = "0") int page,
+    public ResponseEntity<BaseResponse<Page<BoardResponseDto>>> getAllBoard(@RequestHeader("Authorization") String accessToken,
+                                                                            @RequestParam(defaultValue = "0") int page,
                                                                             @RequestParam(defaultValue = "5") int size) {
-        Page<BoardResponseDto> boardPage = boardServiceImpl.getBoardList(page, size);
+        Page<BoardResponseDto> boardPage = boardServiceImpl.getBoardList(accessToken, page, size);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(BaseResponse.<Page<BoardResponseDto>>builder()
                         .code(HttpStatus.OK.value())
-                        .data(boardServiceImpl.getBoardList(page, size))
+                        .data(boardPage)
                         .build());
     }
 
-//    @PostMapping("/posts")
+    /**
+     *
+     * @param boardPostsRequestDto
+     * @return ResponseEntity<BaseResponse<BoardPostsResponseDto>>
+     */
+    @PostMapping("/posts")
+    @ResponseBody
+    public ResponseEntity<BaseResponse<CommonResponseDto>> addBoard(@RequestHeader("Authorization") String accessToken,
+                                                                    @RequestBody BoardPostsRequestDto boardPostsRequestDto) {
+        CommonResponseDto commonResponseDto = boardServiceImpl.createBoard(accessToken, boardPostsRequestDto);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(BaseResponse.<CommonResponseDto>builder()
+                        .code(HttpStatus.OK.value())
+                        .data(commonResponseDto)
+                        .build());
+    }
 }
