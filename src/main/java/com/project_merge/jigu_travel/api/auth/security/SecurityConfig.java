@@ -41,6 +41,7 @@ public class SecurityConfig {
                         .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/user-info").permitAll()
+                        .requestMatchers("/location/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(jwtUtil, userService), UsernamePasswordAuthenticationFilter.class) // UserService 추가
@@ -49,6 +50,7 @@ public class SecurityConfig {
                         .logoutSuccessUrl("/home")
                         .permitAll()
                 );
+
 
         return http.build();
     }
