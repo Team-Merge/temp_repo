@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<User> findByLoginId(String loginId) {
-        return userRepository.findByLoginId(loginId);
+        return userRepository.findByLoginIdAndDeletedFalse(loginId);
     }
 
     @Override
@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
         }
 
         // 사용자 ID로 사용자 정보 조회
-        Optional<User> userOpt = userRepository.findByLoginId(loginId);
+        Optional<User> userOpt = userRepository.findByLoginIdAndDeletedFalse(loginId);
         if (userOpt.isPresent()) {
             return userOpt.get().getNickname();
         } else {

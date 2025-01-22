@@ -34,7 +34,7 @@ public class AuthServiceImpl implements AuthService {
     @Transactional  // 트랜잭션 추가
     @Override
     public LoginResponseDto login(LoginRequestDto loginRequest) {
-        User user = userRepository.findByLoginId(loginRequest.getLoginId())
+        User user = userRepository.findByLoginIdAndDeletedFalse(loginRequest.getLoginId())
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
@@ -63,7 +63,7 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     @Override
     public void register(RegisterRequestDto request) {
-        if (userRepository.findByLoginId(request.getLoginId()).isPresent()) {
+        if (userRepository.findByLoginIdAndDeletedFalse(request.getLoginId()).isPresent()) {
             throw new CustomException(ErrorCode.DUPLICATE_LOGIN_ID);
         }
 
@@ -93,7 +93,7 @@ public class AuthServiceImpl implements AuthService {
 
         System.out.println("로그아웃 요청한 사용자 ID: " + loginId);
 
-        User user = userRepository.findByLoginId(loginId)
+        User user = userRepository.findByLoginIdAndDeletedFalse(loginId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         Auth auth = authRepository.findByAccessToken(token)
