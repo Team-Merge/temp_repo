@@ -1,0 +1,40 @@
+package com.project_merge.jigu_travel.api.websocket.service;
+
+import com.project_merge.jigu_travel.api.websocket.dto.requestDto.LocationRequestDto;
+import com.project_merge.jigu_travel.api.websocket.dto.responseDto.PlaceResponseDto;
+import com.project_merge.jigu_travel.api.websocket.dto.responseDto.SubscribeInitResponseDto;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.UUID;
+
+@Service
+@RequiredArgsConstructor
+public class SocketServiceImpl implements SocketService{
+
+    @Autowired
+    private SimpMessageSendingOperations messagingTemplate;
+
+    @Override
+    public void sendMessage(String accessToken, LocationRequestDto locationRequestDto) {
+        String destination = getDestination(locationRequestDto.getServiceUUID());
+
+        List<PlaceResponseDto> result = null;
+
+        messagingTemplate.convertAndSend(destination, result);
+    }
+
+    @Override
+    public SubscribeInitResponseDto createUUID(String accessToken) {
+        return SubscribeInitResponseDto.builder()
+                .serviceUUID(UUID.randomUUID())
+                .build();
+    }
+
+    private String getDestination(UUID serviceUUID) {
+        return "/sub/" + serviceUUID;
+    }
+}
