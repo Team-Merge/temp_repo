@@ -49,6 +49,13 @@ dependencies {
 	implementation 'org.springframework.security:spring-security-crypto'
 	implementation 'javax.servlet:javax.servlet-api:4.0.1'  // Servlet API 의존성 추가
 
+	//websocket
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	implementation 'org.webjars:sockjs-client:1.1.2'
+	implementation 'org.webjars:stomp-websocket:2.3.3-1'
+
+	//log
+	implementation 'org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16'
 }
 
 tasks.named('test') {

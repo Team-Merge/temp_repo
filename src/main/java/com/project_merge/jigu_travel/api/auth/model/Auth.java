@@ -30,10 +30,10 @@ public class Auth {
     @Column(name = "auth_type", nullable = false)
     private AuthType authType;
 
-    @Column(nullable = false, length = 500)  // 🔥 Access Token 저장
+    @Column(nullable = false, length = 500)
     private String accessToken;
 
-    @Column(nullable = false, length = 500)  // 🔥 Refresh Token 저장
+    @Column(nullable = false, length = 500)
     private String refreshToken;
 
     @CreationTimestamp

@@ -30,7 +30,7 @@ public class UserController {
         }
 
         String loginId = userDetails.getUsername();
-        User user = userRepository.findByLoginId(loginId)
+        User user = userRepository.findByLoginIdAndDeletedFalse(loginId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         UserDto userDto = UserDto.builder()
