@@ -1,6 +1,6 @@
-package com.project_merge.jigu_travel.api.location.repository;
+package com.project_merge.jigu_travel.api.Place.repository;
 
-import com.project_merge.jigu_travel.api.location.model.Place;
+import com.project_merge.jigu_travel.api.Place.model.Place;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

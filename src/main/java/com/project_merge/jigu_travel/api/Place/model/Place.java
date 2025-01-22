@@ -1,4 +1,4 @@
-package com.project_merge.jigu_travel.api.location.model;
+package com.project_merge.jigu_travel.api.Place.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
