@@ -40,7 +40,7 @@ public class SocketController {
                         .build());
     }
 
-    @MessageMapping("/place/{")
+    @MessageMapping("/place")
     public void sendNearPlace(@Header("Authorization") String accessToken, @Payload LocationRequestDto locationRequestDto) {
         logger.info("Request Location Message. serviceUUID : {}, latitude : {}, longitude : {}", locationRequestDto.getServiceUUID(), locationRequestDto.getLatitude(), locationRequestDto.getLongitude());
 
