@@ -47,6 +47,8 @@ public class SecurityConfig {
                         .requestMatchers("/ws/**", "/stomp-ws/**").permitAll()
                         .requestMatchers("/pub/**", "/sub/**").permitAll()
                         .requestMatchers("/location/**").permitAll()
+                        .requestMatchers("/ai-guide/**").permitAll()
+                        .requestMatchers("/api/ai-guide/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exception -> exception
