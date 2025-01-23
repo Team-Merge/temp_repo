@@ -9,6 +9,29 @@ function initMap() {
             const lat = position.coords.latitude;
             const lng = position.coords.longitude;
 
+            fetch("http://localhost:8080/location/user-location", {
+            method: "POST",
+            headers: {"Content-Type": "application/json", },
+            body: JSON.stringify({ latitude: lat, longitude: lng }),
+            })
+            .then((response) => response.json())
+            .then((data) => console.log("위치 저장:", data))
+            .catch((error) => console.error("Error:", error));
+
+            fetch("http://localhost:8080/location/user-location", {
+                method: "GET",
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.code === 200) {
+                        console.log("저장된 위치 데이터:", data.data);
+                    } else {
+                        console.log("메시지:", data.message);
+                    }
+                })
+                .catch((error) => console.error("Error:", error));
+
+
             // 지도 초기화
             map = new naver.maps.Map('map', {
                 center: new naver.maps.LatLng(lat, lng),
@@ -71,6 +94,7 @@ function displayNearbyPlaces(places) {
 
     places.forEach((place) => {
         try {
+            // 마커 생성
             const marker = new naver.maps.Marker({
                 position: new naver.maps.LatLng(place.latitude, place.longitude),
                 map: map,
@@ -79,7 +103,21 @@ function displayNearbyPlaces(places) {
 
             // 마커 클릭 이벤트 설정
             naver.maps.Event.addListener(marker, 'click', () => {
-                window.location.href = `/location/place/${place.placeId}`;
+                fetch(`http://localhost:8080/location/place/${place.placeId}`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        if (data.code === 200) {
+                            console.log("상세 정보:", data.data);
+                        } else {
+                            console.log("메시지:", data.message);
+                        }
+                    })
+                    .catch((error) => console.error("Error fetching place details:", error));
             });
         } catch (error) {
             console.error(`Error creating marker for place: ${place.name}`, error);
