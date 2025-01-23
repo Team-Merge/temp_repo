@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Location Map</title>
+    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=n3x47owp3d"></script>
+    <style>
+        #map {
+            width: 100%;
+            height: 500px;
+        }
+    </style>
+</head>
+<body>
+<h1>현위치</h1>
+<p id="message"></p>
+<div id="map"></div> <!-- 지도 영역 -->
+<button id="find-nearby">주변 명소 보기</button>
+
+<script src="/js/location.js"></script>
+</body>
+</html>
