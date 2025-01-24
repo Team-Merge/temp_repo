@@ -47,6 +47,8 @@ public class SecurityConfig {
                         .requestMatchers("/ws/**", "/stomp-ws/**").permitAll()
                         .requestMatchers("/pub/**", "/sub/**").permitAll()
                         .requestMatchers("/location/**").permitAll()
+                        .requestMatchers("/ai-guide/**").permitAll()
+                        .requestMatchers("/api/ai-guide/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exception -> exception
@@ -68,7 +70,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://127.0.0.1:8080", "http://localhost:8080", "https://jiangxy.github.io"));
+        configuration.setAllowedOrigins(List.of("http://127.0.0.1:8080", "http://localhost:8080", "https://jiangxy.github.io", "http://127.0.0.1:5173", "http://localhost:5173", "http://13.209.3.228:8080", "https://13.209.3.228:8080"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setExposedHeaders(List.of(
                 "Authorization",

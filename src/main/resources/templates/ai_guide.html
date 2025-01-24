@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI 음성 가이드</title>
+</head>
+<body>
+<h1>음성 녹음</h1>
+
+<!-- 텍스트 질문 입력 필드 -->
+<h2>텍스트 질문</h2>
+<input type="text" id="textQuestion" placeholder="텍스트로 질문을 입력하세요" />
+<button id="submitTextQuestion">질문 제출</button>
+
+<!-- 음성 녹음 관련 -->
+<h2>음성 녹음</h2>
+<button id="startRecord">녹음 시작</button>
+<button id="stopRecord">녹음 종료</button>
+<audio id="audioPlayback" controls></audio>
+
+<!-- 응답을 출력할 div -->
+<div id="responseContainer" style="margin-top: 20px;">
+    <h2>AI 응답:</h2>
+    <pre id="aiResponse">API 응답이 여기에 표시됩니다...</pre>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const jwtToken = localStorage.getItem("jwt");  // 로컬스토리지에서 JWT 토큰을 가져옴
+
+        if (!jwtToken || jwtToken === "undefined") {
+            console.log("JWT 토큰 없음. 로그인 필요.");
+            alert("로그인 후 사용해주세요.");
+            return;
+        }
+
+        // JWT 토큰을 사용하여 API 요청에 추가
+        const headers = {
+            "Authorization": "Bearer " + jwtToken,
+            "Content-Type": "application/json"
+        };
+
+        let mediaRecorder;
+        let audioChunks = [];
+
+        // 텍스트 질문 제출 처리
+        document.getElementById('submitTextQuestion').onclick = async () => {
+            const textQuestion = document.getElementById('textQuestion').value;
+
+            // 텍스트 질문이 비어 있으면 처리하지 않음
+            if (!textQuestion) {
+                alert("질문을 입력하세요.");
+                return;
+            }
+
+            // JSON 데이터 생성
+            const requestData = {
+                user_question: textQuestion
+            };
+
+            const response = await fetch("/api/ai-guide/upload-text", {
+                method: "POST",
+                headers: headers,
+                body: JSON.stringify(requestData)  // FormData 대신 JSON.stringify 사용
+            });
+
+            const data = await response.json();
+            displayResponse(data);  // 서버 응답을 화면에 출력
+        };
+
+        // 녹음 시작
+        document.getElementById('startRecord').onclick = async () => {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            mediaRecorder = new MediaRecorder(stream);
+
+            mediaRecorder.ondataavailable = event => {
+                audioChunks.push(event.data);
+            };
+
+            mediaRecorder.onstop = async () => {
+                const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                const audioUrl = URL.createObjectURL(audioBlob);
+                document.getElementById('audioPlayback').src = audioUrl;
+
+                // 녹음된 오디오 파일을 서버로 전송
+                const formData = new FormData();
+                formData.append("audio", audioBlob, "audio.wav");
+
+                const response = await fetch("/api/ai-guide/upload-audio", {
+                    method: "POST",
+                    headers: headers,
+                    body: formData
+                });
+
+                const data = await response.json();
+                displayResponse(data);  // 서버 응답을 화면에 출력
+            };
+
+            mediaRecorder.start();
+        };
+
+        // 녹음 종료
+        document.getElementById('stopRecord').onclick = () => {
+            mediaRecorder.stop();
+        };
+
+        // API 응답을 화면에 출력하는 함수
+        function displayResponse(data) {
+            const responseContainer = document.getElementById('aiResponse');
+            if (data.error) {
+                responseContainer.textContent = `Error: ${data.error}`;
+            } else {
+                // 받은 응답을 출력 (AI 응답과 대화 기록 출력 예시)
+                const answer = data.answer || "No answer provided.";
+                const conversationHistory = data.conversation_history ? JSON.stringify(data.conversation_history.history, null, 2) : "No conversation history.";
+
+                responseContainer.textContent = `Answer: ${answer}\n\nConversation History:\n${conversationHistory}`;
+            }
+        }
+    });
+</script>
+
+</body>
+</html>
