@@ -1,13 +1,12 @@
 package com.project_merge.jigu_travel.api.ai_guide.controller;
 
-import com.project_merge.jigu_travel.api.ai_guide.dto.AiGuideAudioResponse;
-import com.project_merge.jigu_travel.api.ai_guide.dto.AiGuideTextResponse;
+import com.project_merge.jigu_travel.api.ai_guide.dto.AudioResponse;
+import com.project_merge.jigu_travel.api.ai_guide.dto.TextResponse;
 import com.project_merge.jigu_travel.api.ai_guide.fast.FastApiClient;
 import com.project_merge.jigu_travel.api.ai_guide.service.AiGuideService;
 import com.project_merge.jigu_travel.api.user.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,7 +22,7 @@ public class AiGuideRestController {
 
     // 음성 녹음 파일 처리
     @PostMapping("/upload-audio")
-    public AiGuideAudioResponse uploadAudio(@RequestParam("audio") MultipartFile audioFile, HttpSession session) {
+    public AudioResponse uploadAudio(@RequestParam("audio") MultipartFile audioFile, HttpSession session) {
         if (audioFile.isEmpty()) {
             System.out.println("파일 비어있음");
         }
@@ -36,13 +35,13 @@ public class AiGuideRestController {
 
     // 텍스트 질문 처리
     @PostMapping("/upload-text")
-    public AiGuideTextResponse uploadText(@RequestBody Map<String, String> requestBody, HttpSession session) {
+    public TextResponse uploadText(@RequestBody Map<String, String> requestBody, HttpSession session) {
         try {
             String userQuestion = requestBody.get("user_question"); // JSON에서 'user_question' 값을 가져옴
             return aiGuideService.handleTextQuestion(userQuestion, session);
         } catch (Exception e) {
             e.printStackTrace();
-            return new AiGuideTextResponse("API 요청 실패", null);
+            return new TextResponse("API 요청 실패", null);
         }
     }
 }
