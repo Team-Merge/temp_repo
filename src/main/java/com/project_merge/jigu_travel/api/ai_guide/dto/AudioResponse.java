@@ -1,16 +1,19 @@
 package com.project_merge.jigu_travel.api.ai_guide.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
-public class AiGuideTextResponse {
-//    private String answer;  // Answer 필드 (String 타입)
+@NoArgsConstructor
+@AllArgsConstructor
+public class AudioResponse {
     private ConversationHistory conversation_history;  // ConversationHistory 객체
+    private String file_url; //음성 파일
 
-    public AiGuideTextResponse(String message, Object o) { //요청실패시
-//        this.answer = message;
+    public AudioResponse(String message, Object o) { //요청실패시
         this.conversation_history = new ConversationHistory();
     }
 
