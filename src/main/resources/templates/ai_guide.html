@@ -106,17 +106,31 @@
         document.getElementById('stopRecord').onclick = () => {
             console.log('녹음 종료 버튼 클릭');
             mediaRecorder.stop();
+
+            // 이전 오디오 데이터 초기화
+            audioChunks = []; // 녹음된 오디오 청크 초기화
+
+            // audioPlayback 초기화
+            document.getElementById('audioPlayback').src = ''; // 기존 재생된 오디오 지우기
         };
 
         // API 응답을 화면에 출력하는 함수
         function displayResponse(data) {
             const responseContainer = document.getElementById('aiResponse');
+            const audioPlayback = document.getElementById('audioPlayback');
+
             if (data.error) {
                 responseContainer.textContent = `Error: ${data.error}`;
             } else {
                 // 받은 응답을 출력 (AI 응답과 대화 기록 출력 예시)
-                const answer = data.conversation_history.history[0].user_question || "No answer provided.";
+                const answer = data.conversation_history.history[0].assistant_response || "No answer provided.";
                 const conversationHistory = data.conversation_history ? JSON.stringify(data.conversation_history.history, null, 2) : "No conversation history.";
+
+                // file_url이 존재하면 음성 파일을 재생
+                if (data.file_url) {
+                    audioPlayback.src = data.file_url;  // 서버에서 받은 file_url을 audio 태그의 src에 설정
+                    audioPlayback.play();  // 바로 재생 시작
+                }
 
                 responseContainer.textContent = `Answer: ${answer}\n\nConversation History:\n${conversationHistory}`;
             }
