@@ -19,6 +19,7 @@
             flex: 1;
             overflow-y: auto;
             margin-bottom: 20px;
+            height: 70vh; /* 화면의 70% 만큼의 높이 */
         }
         #userInputContainer {
             display: flex;
@@ -75,11 +76,21 @@
         #recordButton {
             background-color: #4CAF50;  /* 기본 버튼 색상 */
         }
+        #loadMoreButton {
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
 
 <div id="chatContainer">
+    <button id="loadMoreButton">더보기</button> <!-- 더보기 버튼 추가 -->
     <div id="messagesContainer"></div>
     <div id="userInputContainer">
         <input type="text" id="textQuestion" placeholder="질문을 입력하세요" />
@@ -107,9 +118,65 @@
         const messagesContainer = document.getElementById("messagesContainer");
         const audioContainer = document.getElementById("audioContainer");
         const audioPlayback = document.getElementById("audioPlayback");
+        const loadMoreButton = document.getElementById("loadMoreButton");
 
         let mediaRecorder;
         let audioChunks = [];
+        let offset = 0; // 대화 기록의 시작 offset
+        const limit = 5; // 한 번에 불러올 대화 기록의 개수
+
+// 이전 대화 기록을 불러오기
+        async function loadChatHistory() {
+            const response = await fetch(`/api/ai-guide/get-chat-history?offset=${offset}&limit=${limit}`, {
+                method: "GET",
+                headers: { "Authorization": "Bearer " + jwtToken }
+            });
+            const data = await response.json();
+
+            if (data && data.length > 0) {
+                // 데이터를 순서대로 받았기 때문에 최신 대화가 맨 아래에 존재
+                // 위로 쌓이도록 하기 위해 순서를 반대로 바꿈
+
+                // 새로운 대화 기록을 화면에 추가
+                data.forEach(item => {
+                    const messageElement = document.createElement("div");
+                    messageElement.classList.add("message", "bot");
+                    messageElement.textContent = 'A: ' + item.conversationAnswer;
+                    messagesContainer.insertBefore(messageElement, messagesContainer.firstChild); // 맨 위에 추가
+
+                    const questionElement = document.createElement("div");
+                    questionElement.classList.add("message", "user");
+                    questionElement.textContent = 'Q: ' + item.conversationQuestion;
+                    messagesContainer.insertBefore(questionElement, messagesContainer.firstChild); // 맨 위에 추가
+                });
+
+                // offset 증가
+                offset += data.length;  // 받은 대화 기록 수만큼 offset 증가
+
+                // 더보기 버튼을 숨김
+                if (data.length < limit) {
+                    loadMoreButton.style.display = "none";  // 더 이상 대화 기록이 없으면 버튼 숨김
+                } else {
+                    loadMoreButton.style.display = "block";  // 여전히 더 많은 대화가 있으면 버튼 표시
+                }
+
+                // 스크롤을 가장 위로 이동
+                messagesContainer.scrollTop = 0;  // 위로 스크롤 이동
+            } else {
+                loadMoreButton.style.display = "none";  // 데이터가 없으면 버튼 숨김
+            }
+        }
+
+        // 페이지 로드 시 이전 대화 기록 불러오기
+        loadChatHistory();
+
+        // "더보기" 버튼 클릭 시 더 많은 대화 기록을 불러오기
+        loadMoreButton.onclick = async () => {
+            loadMoreButton.disabled = true;  // 버튼 비활성화 (요청 중에는 더 이상 클릭할 수 없게 함)
+            await loadChatHistory();
+            loadMoreButton.disabled = false;  // 버튼 활성화
+        };
+
 
         // 텍스트 질문 제출
         sendButton.onclick = async () => {
@@ -119,8 +186,6 @@
                 alert("질문을 입력하세요.");
                 return;
             }
-
-            // displayUserMessage(textQuestion);  // 사용자 질문 화면에 표시
 
             const requestData = { user_question: textQuestion };
             const response = await fetch("/api/ai-guide/upload-text", {
@@ -135,7 +200,6 @@
 
         // 음성 녹음 시작
         recordButton.onclick = async () => {
-            // 버튼 스타일 변경
             recordButton.textContent = "녹음 종료";  // 버튼 텍스트 변경
             recordButton.classList.add("recordButtonActive");  // 빨간색 버튼으로 변경
 
@@ -153,7 +217,6 @@
                 const audioUrl = URL.createObjectURL(audioBlob);
                 audioPlayback.src = audioUrl;
 
-                // 녹음된 오디오 파일을 서버로 전송
                 const formData = new FormData();
                 formData.append("audio", audioBlob, "audio.wav");
 
@@ -180,45 +243,35 @@
         });
 
         // 사용자 메시지 화면에 표시
-        function displayUserMessage(message) {
+        function displayMessage(message) {
             const messageElement = document.createElement("div");
-            messageElement.classList.add("message", "user");
-            messageElement.textContent = message;
+            messageElement.classList.add("message", message.type);  // type으로 bot, user 구분
+            messageElement.textContent = message.text;
             messagesContainer.appendChild(messageElement);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;  // 스크롤을 가장 아래로 이동
         }
 
         // 서버 응답 화면에 표시
         function displayResponse(data) {
-            const responseContainer = document.createElement("div");
-            responseContainer.classList.add("message", "bot");
-
             if (data.error) {
-                responseContainer.textContent = `Error: ${data.error}`;
+                displayMessage({ type: "bot", text: `Error: ${data.error}` });
             } else {
-                const answer = data.conversation_history.history[0].assistant_response || "No answer provided.";
-                responseContainer.textContent = `Answer: ${answer}`;
 
-                // 질문도 출력 (user_question)
                 const userQuestion = data.conversation_history.history[0].user_question || "No question provided.";
-                const userQuestionElement = document.createElement("div");
-                userQuestionElement.classList.add("message", "user");
-                userQuestionElement.textContent = `Question: ${userQuestion}`;
+                displayMessage({ type: "user", text: `Q: ${userQuestion}` });
 
-                messagesContainer.appendChild(userQuestionElement);
-                messagesContainer.appendChild(responseContainer);
+                const answer = data.conversation_history.history[0].assistant_response || "No answer provided.";
+                displayMessage({ type: "bot", text: `A: ${answer}` });
 
-                // file_url이 존재하면 음성 파일을 재생
                 if (data.file_url) {
-                    audioPlayback.src = data.file_url;  // 서버에서 받은 file_url을 audio 태그의 src에 설정
+                    audioPlayback.src = data.file_url;
                     audioPlayback.style.display = "block";  // 음성 파일 재생 표시
                     audioPlayback.play();  // 바로 재생 시작
                 }
             }
-
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;  // 스크롤을 가장 아래로 이동
         }
     });
+
 </script>
 
 </body>

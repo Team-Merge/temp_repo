@@ -10,12 +10,16 @@ import com.project_merge.jigu_travel.api.ai_guide.repository.ConversationHistory
 import com.project_merge.jigu_travel.api.user.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -86,6 +90,19 @@ public class AiGuideServiceImpl implements AiGuideService {
         }
     }
 
+    //대화 기록 처리 함수
+    @Override
+    public List<ConversationHistory> handleChatHistory( int offset, int limit) {
+        System.out.println("서비스 확인");
+        //getConversationHistoryFromSession(session);
+        UUID userId = userService.getCurrentUserUUID();
+        Pageable pageable = PageRequest.of(offset / limit, limit); // offset을 limit으로 나눠서 페이지 번호로 설정
+        Page<ConversationHistory> pageResult = conversationHistoryRepository.findByUserIdOrderByConversationDatetimeDesc(userId, pageable);
+        // 콘솔에 페이지 결과 출력
+        System.out.println("Page Result: " + pageResult.getContent());
+        return pageResult.getContent();  // 페이지에서 내용만 가져옴
+    }
+
     // 대화 기록 저장 함수
     private void saveConversationHistoryToSession(HttpSession session, UserInputRequest.ConversationHistory conversationHistory) {
         session.setAttribute("conversation_history", conversationHistory);
@@ -94,12 +111,12 @@ public class AiGuideServiceImpl implements AiGuideService {
     // 대화 기록 DB에 저장
     private void saveConversationHistoryToDb(UserInputRequest.ConversationHistory.ConversationHistoryItem item, UserInputRequest userInput, UUID userId) {
         ConversationHistory history = new ConversationHistory();
-        history.setUser_id(userId);
-        history.setConversation_question(item.getUser_question());
-        history.setConversation_answer(item.getAssistant_response());
-        history.setConversation_latitude(userInput.getLatitude());
-        history.setConversation_longitude(userInput.getLongitude());
-        history.setConversation_datetime(LocalDateTime.now());
+        history.setUserId(userId);
+        history.setConversationQuestion(item.getUser_question());
+        history.setConversationAnswer(item.getAssistant_response());
+        history.setConversationLatitude(userInput.getLatitude());
+        history.setConversationLongitude(userInput.getLongitude());
+        history.setConversationDatetime(LocalDateTime.now());
 
         conversationHistoryRepository.save(history);
         System.out.println("DB 저장 완료");
