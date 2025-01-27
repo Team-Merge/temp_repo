@@ -18,5 +18,5 @@ public interface AiGuideService {
     AudioResponse handleAudioAndQuestion(MultipartFile audioFile, HttpSession session);
 
     //대화 기록 처리 함수
-    List<ConversationHistory> handleChatHistory(int offset, int limit,HttpSession session);
+    List<ConversationHistory> handleChatHistory(int offset, int limit);
 }

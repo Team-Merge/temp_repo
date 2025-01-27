@@ -92,9 +92,9 @@ public class AiGuideServiceImpl implements AiGuideService {
 
     //대화 기록 처리 함수
     @Override
-    public List<ConversationHistory> handleChatHistory( int offset, int limit,HttpSession session) {
+    public List<ConversationHistory> handleChatHistory( int offset, int limit) {
         System.out.println("서비스 확인");
-        getConversationHistoryFromSession(session);
+        //getConversationHistoryFromSession(session);
         UUID userId = userService.getCurrentUserUUID();
         Pageable pageable = PageRequest.of(offset / limit, limit); // offset을 limit으로 나눠서 페이지 번호로 설정
         Page<ConversationHistory> pageResult = conversationHistoryRepository.findByUserIdOrderByConversationDatetimeDesc(userId, pageable);

@@ -49,8 +49,8 @@ public class AiGuideRestController {
 
     // 대화 기록 처리
     @GetMapping("/get-chat-history")
-    public List<ConversationHistory> getChatHistory(@RequestParam int offset, @RequestParam int limit,HttpSession session) {
+    public List<ConversationHistory> getChatHistory(@RequestParam int offset, @RequestParam int limit) {
         System.out.println("컨트롤러 확인");
-        return aiGuideService.handleChatHistory(offset,limit,session);
+        return aiGuideService.handleChatHistory(offset,limit);
     }
 }
