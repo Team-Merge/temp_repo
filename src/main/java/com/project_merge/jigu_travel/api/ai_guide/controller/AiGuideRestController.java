@@ -2,6 +2,7 @@ package com.project_merge.jigu_travel.api.ai_guide.controller;
 
 import com.project_merge.jigu_travel.api.ai_guide.dto.AudioResponse;
 import com.project_merge.jigu_travel.api.ai_guide.dto.TextResponse;
+import com.project_merge.jigu_travel.api.ai_guide.entity.ConversationHistory;
 import com.project_merge.jigu_travel.api.ai_guide.fast.FastApiClient;
 import com.project_merge.jigu_travel.api.ai_guide.service.AiGuideService;
 import com.project_merge.jigu_travel.api.user.service.UserService;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController  // REST API 요청을 처리하는 컨트롤러
@@ -43,5 +45,12 @@ public class AiGuideRestController {
             e.printStackTrace();
             return new TextResponse("API 요청 실패", null);
         }
+    }
+
+    // 대화 기록 처리
+    @GetMapping("/get-chat-history")
+    public List<ConversationHistory> getChatHistory(@RequestParam int offset, @RequestParam int limit,HttpSession session) {
+        System.out.println("컨트롤러 확인");
+        return aiGuideService.handleChatHistory(offset,limit,session);
     }
 }
