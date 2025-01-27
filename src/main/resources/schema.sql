@@ -4,7 +4,6 @@
 --SET REFERENTIAL_INTEGRITY TRUE;
 
 --`user` 테이블 생성
-
 CREATE TABLE IF NOT EXISTS users (
     user_id UUID PRIMARY KEY,
     login_id VARCHAR(30) NOT NULL UNIQUE,
@@ -31,3 +30,17 @@ CREATE TABLE IF NOT EXISTS auth (
     updated_at DATETIME NULL ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
+
+---- `place` 테이블 생성
+--CREATE TABLE IF NOT EXISTS place (
+--    place_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+--    type ENUM('맛집', '오락_체험', '힐링', '역사_문화', '쇼핑') NOT NULL,
+--    name VARCHAR(255) NOT NULL,
+--    tel VARCHAR(20),
+--    latitude DOUBLE NOT NULL,
+--    longitude DOUBLE NOT NULL,
+--    address VARCHAR(50) NOT NULL,
+--    deleted BOOLEAN NOT NULL DEFAULT FALSE,
+--    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+--    updated_at DATETIME NULL ON UPDATE CURRENT_TIMESTAMP
+--);

@@ -1,5 +1,6 @@
 package com.project_merge.jigu_travel.api.websocket.dto.responseDto;
 
+import com.project_merge.jigu_travel.global.common.PlaceType;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -17,8 +18,6 @@ public class PlaceResponseDto {
     private Double latitude;
     private Double longitude;
     private String address;
-    private LocalDateTime opened;
-    private LocalDateTime closed;
     private Boolean deleted;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
