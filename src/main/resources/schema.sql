@@ -31,3 +31,14 @@ CREATE TABLE IF NOT EXISTS auth (
     updated_at DATETIME NULL ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
+
+--대화 기록
+CREATE TABLE IF NOT EXISTS conversation_history (
+                                                    conversation_id IDENTITY PRIMARY KEY,
+                                                    user_id UUID NOT NULL,
+                                                    conversation_question VARCHAR(1000),
+    conversation_answer VARCHAR(1000),
+    conversation_latitude DOUBLE NOT NULL,
+    conversation_longitude DOUBLE NOT NULL,
+    conversation_datetime TIMESTAMP NOT NULL
+    );
