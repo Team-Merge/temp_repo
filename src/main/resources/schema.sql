@@ -44,3 +44,15 @@ CREATE TABLE IF NOT EXISTS auth (
 --    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 --    updated_at DATETIME NULL ON UPDATE CURRENT_TIMESTAMP
 --);
+
+
+--대화 기록
+CREATE TABLE IF NOT EXISTS conversation_history (
+   conversation_id IDENTITY PRIMARY KEY,
+   user_id UUID NOT NULL,
+    conversation_question VARCHAR(1000),
+    conversation_answer VARCHAR(1000),
+    conversation_latitude DOUBLE NOT NULL,
+    conversation_longitude DOUBLE NOT NULL,
+    conversation_datetime TIMESTAMP NOT NULL
+    );
