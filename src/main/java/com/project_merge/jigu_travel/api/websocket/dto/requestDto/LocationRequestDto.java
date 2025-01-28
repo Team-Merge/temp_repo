@@ -13,4 +13,5 @@ public class LocationRequestDto {
     private UUID serviceUUID;
     private Double latitude;
     private Double longitude;
+    // private String timestamp;
 }

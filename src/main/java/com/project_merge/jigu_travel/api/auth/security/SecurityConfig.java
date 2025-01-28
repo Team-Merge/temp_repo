@@ -46,7 +46,7 @@ public class SecurityConfig {
                         .requestMatchers("/board/**").permitAll()
                         .requestMatchers("/ws/**", "/stomp-ws/**").permitAll()
                         .requestMatchers("/pub/**", "/sub/**").permitAll()
-                        .requestMatchers("/location/**").permitAll()
+                        .requestMatchers("/location/**", "/place/**").permitAll()
                         .requestMatchers("/ai-guide/**").permitAll()
                         .requestMatchers("/api/ai-guide/**").permitAll()
                         .anyRequest().authenticated()

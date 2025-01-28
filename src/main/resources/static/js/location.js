@@ -4,33 +4,16 @@ let map, currentMarker;
 function initMap() {
     navigator.geolocation.getCurrentPosition(
         (position) => {
-            console.log(`Latitude: ${position.coords.latitude}`);
-            console.log(`Longitude: ${position.coords.longitude}`);
             const lat = position.coords.latitude;
             const lng = position.coords.longitude;
 
-            fetch("http://localhost:8080/location/user-location", {
-            method: "POST",
-            headers: {"Content-Type": "application/json", },
-            body: JSON.stringify({ latitude: lat, longitude: lng }),
-            })
-            .then((response) => response.json())
-            .then((data) => console.log("위치 저장:", data))
-            .catch((error) => console.error("Error:", error));
+            console.log(`현재 위치 - 위도: ${lat}, 경도: ${lng}`);
 
-            fetch("http://localhost:8080/location/user-location", {
-                method: "GET",
-            })
-                .then((response) => response.json())
-                .then((data) => {
-                    if (data.code === 200) {
-                        console.log("저장된 위치 데이터:", data.data);
-                    } else {
-                        console.log("메시지:", data.message);
-                    }
-                })
-                .catch((error) => console.error("Error:", error));
+            // 사용자 위치 저장
+            saveUserLocation(lat, lng);
 
+            // 사용자 위치 불러오기
+            getUserLocation();
 
             // 지도 초기화
             map = new naver.maps.Map('map', {
@@ -38,19 +21,12 @@ function initMap() {
                 zoom: 15,
             });
 
-            // 현재 위치 표시
-            currentMarker = new naver.maps.Marker({
-                position: new naver.maps.LatLng(lat, lng),
-                map: map,
-                icon: {
-                    content: '<div style="width: 14px; height: 14px; background-color: red; opacity: 0.7; border-radius: 50%;"></div>',
-                    anchor: new naver.maps.Point(7, 7),
-                },
-            });
+            // 현재 위치 마커 표시
+            addCurrentMarker(lat, lng);
 
             // 버튼 클릭 이벤트 설정
             document.getElementById('find-nearby').addEventListener('click', () => {
-                fetchNearbyPlaces(lat, lng);
+                fetchNearbyPlace(lat, lng);
             });
         },
         (error) => {
@@ -60,35 +36,81 @@ function initMap() {
     );
 }
 
-// 주변 명소 검색
-function fetchNearbyPlaces(latitude, longitude) {
-    console.log(`API 요청 - 위도: ${latitude}, 경도: ${longitude}`);
-    const radius = 1.0; // 검색 반경 1km
+// 사용자 위치 저장
+function saveUserLocation(latitude, longitude) {
+    fetch("http://localhost:8080/location/user-location", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ latitude, longitude }),
+    })
+        .then((response) => response.json())
+        .then((data) => console.log("위치 저장 성공:", data))
+        .catch((error) => console.error("Error saving location:", error));
+}
 
-    fetch(`http://localhost:8080/location/nearby-places?latitude=${latitude}&longitude=${longitude}&radius=${radius}`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-        },
+// 사용자 위치 불러오기
+function getUserLocation() {
+    fetch("http://localhost:8080/location/user-location", {
+        method: "GET",
     })
         .then((response) => response.json())
         .then((data) => {
-            console.log('API 응답:', data);
-            if (data.data) {
-                displayNearbyPlaces(data.data);
+            if (data.code === 200) {
+                console.log("저장된 위치 데이터:", data.data);
             } else {
-                document.getElementById('message').textContent = data.message;
+                console.log("메시지:", data.message);
+            }
+        })
+        .catch((error) => console.error("Error fetching location:", error));
+}
+
+// 현재 위치 마커 추가
+function addCurrentMarker(latitude, longitude) {
+    currentMarker = new naver.maps.Marker({
+        position: new naver.maps.LatLng(latitude, longitude),
+        map: map,
+        icon: {
+            content: '<div style="width: 14px; height: 14px; background-color: red; opacity: 0.7; border-radius: 50%;"></div>',
+            anchor: new naver.maps.Point(7, 7),
+        },
+    });
+}
+
+// 주변 명소 검색
+function fetchNearbyPlace(latitude, longitude) {
+    const radius = 1.0; // 검색 반경 1km
+
+    // fetch 요청 시작
+    fetch(`http://localhost:8080/place/nearby-places?latitude=${latitude}&longitude=${longitude}&radius=${radius}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    })
+        .then((response) => {
+        console.log(`Request URL: http://localhost:8080/place/nearby-places?latitude=${latitude}&longitude=${longitude}&radius=${radius}`);
+            console.log("Response Status:", response.status); // 응답 상태 코드 확인
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then((data) => {
+            if (data.data) {
+                displayNearbyPlace(data.data);
+            } else {
+                document.getElementById("message").textContent = data.message;
             }
         })
         .catch((error) => {
-            console.error('Error fetching nearby places:', error);
+            console.error("Error fetching nearby places:", error);
         });
 }
 
 // 명소 표시
-function displayNearbyPlaces(places) {
+function displayNearbyPlace(places) {
     if (!places || places.length === 0) {
-        console.log("No nearby places found.");
+        console.log("주변 명소를 찾을 수 없습니다.");
         return;
     }
 
@@ -102,22 +124,8 @@ function displayNearbyPlaces(places) {
             });
 
             // 마커 클릭 이벤트 설정
-            naver.maps.Event.addListener(marker, 'click', () => {
-                fetch(`http://localhost:8080/location/place/${place.placeId}`, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                })
-                    .then((response) => response.json())
-                    .then((data) => {
-                        if (data.code === 200) {
-                            console.log("상세 정보:", data.data);
-                        } else {
-                            console.log("메시지:", data.message);
-                        }
-                    })
-                    .catch((error) => console.error("Error fetching place details:", error));
+            naver.maps.Event.addListener(marker, "click", () => {
+                fetchPlaceDetail(place.placeId);
             });
         } catch (error) {
             console.error(`Error creating marker for place: ${place.name}`, error);
@@ -125,5 +133,24 @@ function displayNearbyPlaces(places) {
     });
 }
 
+// 명소 상세 정보 가져오기
+function fetchPlaceDetail(placeId) {
+    fetch(`http://localhost:8080/place/${placeId}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.code === 200) {
+                console.log("명소 상세 정보:", data.data);
+            } else {
+                console.log("메시지:", data.message);
+            }
+        })
+        .catch((error) => console.error("Error fetching place details:", error));
+}
+
 // DOMContentLoaded 이벤트에서 initMap 호출
-document.addEventListener('DOMContentLoaded', initMap);
+document.addEventListener("DOMContentLoaded", initMap);
