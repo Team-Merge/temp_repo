@@ -1,24 +1,27 @@
 package com.project_merge.jigu_travel.api.ai_guide.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
-public class UserInputRequestDto {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class UserInputRequest {
     private String user_question;
     private List<String> user_category;
     private double latitude;
     private double longitude;
-    private ConversationHistory conversation_history;  // ConversationHistory 객체
+    private ConversationHistory conversation_history = new ConversationHistory();  // 빈 리스트로 초기화
 
     @Data
     public static class ConversationHistory {
-        private List<ConversationHistoryItem> history;  // History 리스트
+        private List<ConversationHistoryItem> history = new ArrayList<>();  // 빈 리스트로 초기화
 
         @Data
         public static class ConversationHistoryItem {

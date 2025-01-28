@@ -1,8 +1,10 @@
 package com.project_merge.jigu_travel.api.ai_guide.fast;
 
-import com.project_merge.jigu_travel.api.ai_guide.dto.AiGuideResponse;
-import com.project_merge.jigu_travel.api.ai_guide.dto.UserInputRequestDto;
+import com.project_merge.jigu_travel.api.ai_guide.dto.AudioResponse;
+import com.project_merge.jigu_travel.api.ai_guide.dto.TextResponse;
+import com.project_merge.jigu_travel.api.ai_guide.dto.UserInputRequest;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -17,9 +19,11 @@ import org.springframework.web.multipart.MultipartFile;
 public interface FastApiClient {
 
 
-    @PostMapping("/") //url 추후 수정 //음성 버전
-    AiGuideResponse getAiGuide(@RequestPart("file") MultipartFile file, @RequestPart("userInput") UserInputRequestDto UserInputRequestDto);
+    @PostMapping(value = "/user_question_voice", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)  // add consumes to specify multipart
+    AudioResponse getAiGuideAudio(
+            @RequestPart("audio_file") MultipartFile file,
+            @RequestPart("user_input") String userInput);
 
-    @PostMapping("/user_question") //음성파일 제외 텍스트로 테스트
-    AiGuideResponse getAiGuideTest(@RequestBody UserInputRequestDto userInputRequestDto);
+    @PostMapping("/user_question_text") //음성파일 제외 텍스트로 테스트
+    TextResponse getAiGuideText(@RequestBody UserInputRequest userInputRequest);
 }

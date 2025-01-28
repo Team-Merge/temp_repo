@@ -19,26 +19,24 @@ public class ConversationHistory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer conversation_id;
+    @Column(name = "conversation_id")  // 언더스코어 있는 컬럼 매핑
+    private Integer conversationId;
 
-    @Column(nullable = false)
-    private UUID user_id;
+    @Column(name = "user_id", nullable = false)  // 언더스코어 있는 컬럼 매핑
+    private UUID userId;
 
+    @Column(name = "conversation_question", nullable = false, length = 1000)
+    private String conversationQuestion;
 
-    @Column(nullable = false,length = 1000)
-    private String conversation_question;
+    @Column(name = "conversation_answer", nullable = true, length = 1000)
+    private String conversationAnswer;
 
-    @Column(nullable = true,length = 1000)
-    private String conversation_answer;
+    @Column(name = "conversation_latitude", nullable = false)
+    private Double conversationLatitude;
 
-    @Column(nullable = false)
-    private Double conversation_latitude;
+    @Column(name = "conversation_longitude", nullable = false)
+    private Double conversationLongitude;
 
-    @Column(nullable = false)
-    private Double conversation_longitude;
-
-    @Column(nullable = false)
-    private LocalDateTime conversation_datetime;
-
-
+    @Column(name = "conversation_datetime", nullable = false)
+    private LocalDateTime conversationDatetime;
 }
