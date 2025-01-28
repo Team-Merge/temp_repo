@@ -1,3 +1,5 @@
+DELETE FROM users;
+
 INSERT INTO users (user_id, login_id, password, nickname, birth_date, gender, location, role, is_admin, deleted, created_at, updated_at)
 VALUES
     (UUID(), 'admin', '$2a$10$9Z4rebsdT3XBHwdyzLih1eXe5ev5mvf0b8cm06oMo4IbiiijRIIty', '관리자', '1990-01-01', 'MALE', 'KOR', 'ROLE_ADMIN', TRUE, FALSE, NOW(), NOW()),
