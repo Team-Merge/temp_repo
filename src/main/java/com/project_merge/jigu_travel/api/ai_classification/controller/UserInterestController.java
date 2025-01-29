@@ -18,12 +18,12 @@ public class UserInterestController {
     public ResponseEntity<BaseResponse<RecommendationData>> fetchAndSaveUserInterest(
             @RequestBody RecommendationRequestDto requestDto) {
 
-        System.out.println("🔹 [DEBUG] 요청 받은 데이터: " + requestDto);
+        System.out.println("[DEBUG] 요청 받은 데이터: " + requestDto);
 
         try {
             RecommendationData response = userInterestService.fetchAndSaveUserInterest(requestDto);
 
-            // ✅ `RecommendationData`만 감싸서 정상 응답 반환
+            // `RecommendationData`만 감싸서 정상 응답 반환
             return ResponseEntity.ok(new BaseResponse<>(200, "SUCCESS", response));
 
         } catch (IllegalArgumentException e) {

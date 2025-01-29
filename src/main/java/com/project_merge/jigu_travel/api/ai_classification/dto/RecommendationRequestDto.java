@@ -9,6 +9,6 @@ import java.util.List;
 public class RecommendationRequestDto {
     private int age;
     private int gender; // 1: 남성, 0: 여성
-    private int annual_travel_frequency; // ✅ FastAPI와 동일한 필드명 사용 (snake_case)
-    private List<String> selected_genres; // ✅ FastAPI와 동일한 필드명 사용 (snake_case)
+    private int annual_travel_frequency; // FastAPI와 동일한 필드명 사용 (snake_case)
+    private List<String> selected_genres; // FastAPI와 동일한 필드명 사용 (snake_case)
 }
