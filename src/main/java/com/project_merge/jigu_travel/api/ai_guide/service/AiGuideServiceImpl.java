@@ -1,6 +1,8 @@
 package com.project_merge.jigu_travel.api.ai_guide.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.project_merge.jigu_travel.api.ai_classification.entity.UserInterest;
+import com.project_merge.jigu_travel.api.ai_classification.repository.UserInterestRepository;
 import com.project_merge.jigu_travel.api.ai_guide.dto.AudioResponse;
 import com.project_merge.jigu_travel.api.ai_guide.dto.TextResponse;
 import com.project_merge.jigu_travel.api.ai_guide.dto.UserInputRequest;
@@ -17,10 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +28,7 @@ public class AiGuideServiceImpl implements AiGuideService {
     private final ConversationHistoryRepository conversationHistoryRepository;
     private final UserService userService;
     private final FastApiClient fastApiClient;
+    private final UserInterestRepository interestRepository;
 
 
     // 텍스트 질문 처리
@@ -137,7 +137,14 @@ public class AiGuideServiceImpl implements AiGuideService {
     private UserInputRequest createUserInput(String userQuestion, UserInputRequest.ConversationHistory conversationHistory) {
         UserInputRequest userInput = new UserInputRequest();
         userInput.setUser_question(userQuestion);
-        userInput.setUser_category(Arrays.asList("맛집", "힐링"));
+//        userInput.setUser_category(Arrays.asList("맛집", "힐링"));
+        Optional<UserInterest> userInterest = interestRepository.findByUserId(userService.getCurrentUserUUID());
+        if(userInterest.isPresent()) {
+            List<String> category = Arrays.asList(userInterest.get().getInterest(),userInterest.get().getInterest2());
+            userInput.setUser_category(category);
+        }else{
+            userInput.setUser_category(Arrays.asList("맛집", "힐링")); //테스트용 기본값
+        }
         userInput.setLatitude(37.508373); // 수정 예정
         userInput.setLongitude(127.103565); // 수정 예정
         userInput.setConversation_history(conversationHistory);
