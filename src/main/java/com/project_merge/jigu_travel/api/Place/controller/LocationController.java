@@ -38,20 +38,15 @@ public class LocationController {
         return ResponseEntity.ok(new BaseResponse<>(200, "위치 저장 성공", "Location saved for user: " + userId));
     }
 
-    // 위치 데이터 반환
-    @GetMapping("/user-location")
-    public ResponseEntity<BaseResponse<List<LocationRequestDto>>> getUserLocation(
+    // 여행 종료 시 HashMap 데이터를 DB로 저장하고 메모리에서 삭제
+    @PostMapping("/end-travel")
+    public ResponseEntity<BaseResponse<String>> endTravel(
             @RequestHeader(value = "Authorization", required = false) String userId) {
         if (userId == null || userId.isEmpty()) {
             userId = "anonymous";
         }
 
-        List<LocationRequestDto> location = locationService.getUserLocation(userId);
-
-        if (location.isEmpty()) {
-            return ResponseEntity.status(404).body(new BaseResponse<>(404, "위치 데이터가 없습니다.", null));
-        }
-
-        return ResponseEntity.ok(new BaseResponse<>(200, "위치 데이터 반환 성공", location));
+        locationService.saveAllUserLocationToDB(userId);
+        return ResponseEntity.ok(new BaseResponse<>(200, "여행 데이터 저장 완료", "All location data saved to DB for user: " + userId));
     }
 }
