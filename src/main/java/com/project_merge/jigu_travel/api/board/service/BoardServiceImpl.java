@@ -1,5 +1,6 @@
 package com.project_merge.jigu_travel.api.board.service;
 
+import com.project_merge.jigu_travel.api.auth.model.CustomUserDetails;
 import com.project_merge.jigu_travel.api.board.dto.reponseDto.BoardResponseDto;
 import com.project_merge.jigu_travel.api.board.dto.reponseDto.BoardUpdateRequestDto;
 import com.project_merge.jigu_travel.api.board.dto.requestDto.BoardUpdateResponseDto;
@@ -25,11 +26,8 @@ public class BoardServiceImpl implements BoardService {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private UserService userService;
-
-    public Page<BoardResponseDto> getBoardList(String accessToken, int page, int size) {
-
+    // 📌 게시글 목록 조회 (로그인 없이 가능)
+    public Page<BoardResponseDto> getBoardList(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by("boardId").descending());
         Page<Board> boardPage = boardJpaRepository.findAll(pageRequest);
 
@@ -43,9 +41,12 @@ public class BoardServiceImpl implements BoardService {
                 .build());
     }
 
+    // 📌 게시글 작성
     @Override
-    public CommonResponseDto createBoard(String accessToken, BoardPostsRequestDto boardPostsRequestDto) {
-        User user = userRepository.findById(userService.getCurrentUserUUID()).orElseThrow(() -> new IllegalArgumentException());
+    public CommonResponseDto createBoard(CustomUserDetails userDetails, BoardPostsRequestDto boardPostsRequestDto) {
+        User user = userRepository.findByLoginIdAndDeletedFalse(userDetails.getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+
         Board newBoard = Board.builder()
                 .user(user)
                 .title(boardPostsRequestDto.getTitle())
@@ -60,41 +61,61 @@ public class BoardServiceImpl implements BoardService {
                 .build();
     }
 
+    // 📌 게시글 수정
     @Override
-    public BoardUpdateResponseDto modifyBoard(String accessToken, BoardUpdateRequestDto boardUpdateRequestDto) {
-        User user = userRepository.findById(userService.getCurrentUserUUID()).orElseThrow(() -> new IllegalArgumentException());
-        Board board = boardJpaRepository.findById(boardUpdateRequestDto.getBoardId()).orElseThrow(() -> new IllegalArgumentException());
-        if(!user.getUserId().equals(board.getUser().getUserId())) {
-            throw new IllegalArgumentException();
+    public BoardUpdateResponseDto modifyBoard(CustomUserDetails userDetails, BoardUpdateRequestDto boardUpdateRequestDto) {
+        User user = userRepository.findByLoginIdAndDeletedFalse(userDetails.getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+
+        Board board = boardJpaRepository.findById(boardUpdateRequestDto.getBoardId())
+                .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
+
+        if (!user.getUserId().equals(board.getUser().getUserId())) {
+            throw new org.springframework.security.access.AccessDeniedException("게시글을 수정할 권한이 없습니다.");
         }
 
-        Board updateBoard = Board.builder()
-                .boardId(board.getBoardId())
-                .user(board.getUser())
-                .title(boardUpdateRequestDto.getTitle())
-                .content(boardUpdateRequestDto.getContent())
-                .likes(board.getLikes())
-                .build();
-        boardJpaRepository.save(updateBoard);
+        board.setTitle(boardUpdateRequestDto.getTitle());
+        board.setContent(boardUpdateRequestDto.getContent());
+        boardJpaRepository.save(board);
 
         return BoardUpdateResponseDto.builder()
-                .title(boardUpdateRequestDto.getTitle())
-                .content(boardUpdateRequestDto.getContent())
+                .title(board.getTitle())
+                .content(board.getContent())
                 .build();
     }
 
+    // 📌 게시글 삭제
     @Override
-    public CommonResponseDto boardDeletion(String accessToken, Long boardId) {
-        User user = userRepository.findById(userService.getCurrentUserUUID()).orElseThrow(() -> new IllegalArgumentException());
-        Board board = boardJpaRepository.findById(boardId).orElseThrow(() -> new IllegalArgumentException());
-        if(!user.getUserId().equals(board.getUser().getUserId())) {
-            throw new IllegalArgumentException();
+    public CommonResponseDto boardDeletion(CustomUserDetails userDetails, Long boardId) {
+        User user = userRepository.findByLoginIdAndDeletedFalse(userDetails.getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+
+        Board board = boardJpaRepository.findById(boardId)
+                .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
+
+        if (!user.getUserId().equals(board.getUser().getUserId())) {
+            throw new org.springframework.security.access.AccessDeniedException("게시글을 삭제할 권한이 없습니다.");
         }
 
         boardJpaRepository.delete(board);
 
         return CommonResponseDto.builder()
                 .message("SUCCESS")
+                .build();
+    }
+
+    // 📌 게시글 상세조회
+    @Override
+    public BoardResponseDto getBoardDetail(Long boardId) {
+        Board board = boardJpaRepository.findById(boardId)
+                .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
+
+        return BoardResponseDto.builder()
+                .boardId(board.getBoardId())
+                .userId(board.getUser().getLoginId())
+                .nickname(board.getUser().getNickname())
+                .title(board.getTitle())
+                .content(board.getContent())
                 .build();
     }
 }
