@@ -52,6 +52,8 @@ public class SecurityConfig {
                         .requestMatchers("/location/**", "/place/**").permitAll()
                         .requestMatchers("/ai-guide/**").permitAll()
                         .requestMatchers("/api/ai-guide/**").permitAll()
+                        .requestMatchers("/api/ai/ai_classification/exists").authenticated()
+
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exception -> exception
