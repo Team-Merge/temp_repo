@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface LocationService {
     void saveUserLocation(String userId, LocationRequestDto locationRequestDto);
-    List<LocationRequestDto> getUserLocation(String userId);
+    void saveAllUserLocationToDB(String userId);
 }
