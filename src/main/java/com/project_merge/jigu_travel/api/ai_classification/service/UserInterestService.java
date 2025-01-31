@@ -22,6 +22,14 @@ public class UserInterestService {
     private final UserInterestRepository userInterestRepository;
     private final UserServiceImpl userService;
 
+    private String cleanCategoryString(String category) {
+        return category
+                .replace("category_", "")      // "category_" 접두사 제거
+                .replaceAll("[ /]+", "_")      // " / " 또는 공백을 "_"로 변환
+                .replaceAll("_+", "_")         // 연속된 "_"를 하나의 "_"로 정리
+                .trim();                       // 앞뒤 공백 제거
+    }
+
     @Transactional
     public RecommendationData fetchAndSaveUserInterest(RecommendationRequestDto requestDto) {
         UUID userId = userService.getCurrentUserUUID();
@@ -47,18 +55,21 @@ public class UserInterestService {
 
         var recommendations = responseDto.getData().getTop2Recommendations();
         if (recommendations.size() >= 2) {
+            String cleanedInterest1 = cleanCategoryString(recommendations.get(0));
+            String cleanedInterest2 = cleanCategoryString(recommendations.get(1));
+
             if (existingInterest.isPresent()) {
                 // 기존 관심사가 있으면 업데이트
                 UserInterest userInterest = existingInterest.get();
-                userInterest.setInterest(recommendations.get(0));
-                userInterest.setInterest2(recommendations.get(1));
+                userInterest.setInterest(cleanedInterest1);
+                userInterest.setInterest2(cleanedInterest2);
                 userInterestRepository.save(userInterest);
             } else {
                 // 기존 관심사가 없으면 새로 저장
                 UserInterest newUserInterest = UserInterest.builder()
                         .userId(userId)
-                        .interest(recommendations.get(0))
-                        .interest2(recommendations.get(1))
+                        .interest(cleanedInterest1)
+                        .interest2(cleanedInterest2)
                         .build();
                 userInterestRepository.save(newUserInterest);
             }
