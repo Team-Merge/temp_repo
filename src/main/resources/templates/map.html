@@ -144,6 +144,7 @@
         <button id="custom-places-btn" class="active">맞춤 명소</button>
         <button id="all-places-btn">모든 명소</button>
         <button id="favorites-btn">즐겨찾기</button>
+        <button id="end-travel-btn">여행 종료</button>
     </div>
     <!-- 명소 리스트 -->
     <div class="places-container">
@@ -160,6 +161,23 @@
     let currentPlaces = [];
 
     document.addEventListener("DOMContentLoaded", function () {
+        const jwtToken = localStorage.getItem("jwt");  // 로컬스토리지에서 JWT 토큰을 가져옴
+
+        if (!jwtToken || jwtToken === "undefined") {
+            console.log("JWT 토큰 없음. 로그인 필요.");
+            alert("로그인 후 사용해주세요.");
+            return;
+        }
+
+        const sendButton = document.getElementById("sendButton");
+        const recordButton = document.getElementById("recordButton");
+        const textQuestionInput = document.getElementById("textQuestion");
+        const messagesContainer = document.getElementById("messagesContainer");
+        const audioContainer = document.getElementById("audioContainer");
+        const audioPlayback = document.getElementById("audioPlayback");
+        const loadMoreButton = document.getElementById("loadMoreButton");
+        const textQuestionButton = document.getElementById("textQuestionButton");
+
         function initMap() {
             if (navigator.geolocation) {
                 navigator.geolocation.watchPosition(updateLocation, handleLocationError, { enableHighAccuracy: true });
@@ -203,7 +221,7 @@
         function saveUserLocation(latitude, longitude) {
             fetch("/location/user-location", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: { "Authorization": "Bearer " + jwtToken, "Content-Type": "application/json" },
                 body: JSON.stringify({ latitude, longitude }),
             })
                 .then((response) => response.json())
@@ -215,7 +233,7 @@
         function fetchNearbyPlace(latitude, longitude) {
             fetch(`/place/nearby-places?latitude=${latitude}&longitude=${longitude}&radius=1.0`, {
                 method: "GET",
-                headers: { "Content-Type": "application/json" },
+                headers: { "Authorization": "Bearer " + jwtToken, "Content-Type": "application/json" },
             })
             .then(response => response.json())
             .then(data => {
@@ -330,6 +348,20 @@
             document.getElementById("place-details").style.display = "none"; // 상세 정보 숨김
         }
 
+        // 여행 종료
+        function endTravel() {
+            fetch("/location/end-travel", {
+                method: "POST",
+                headers: { "Authorization": "Bearer " + jwtToken, "Content-Type": "application/json" },
+            })
+                .then((response) => response.json())
+                .then((data) => {
+            console.log("여행 종료 및 저장 성공:", data);
+            alert("여행 종료! 데이터가 저장되었습니다.");
+        })
+                .catch((error) => console.error("Error saving info:", error));
+        }
+
         // "모든 명소" 버튼 클릭 시 명소 검색 실행
         document.getElementById("all-places-btn").addEventListener("click", function () {
             setActiveButton("all-places-btn");
@@ -340,6 +372,12 @@
         document.getElementById("custom-places-btn").addEventListener("click", function () {
             setActiveButton("custom-places-btn");
             displayNearbyPlace([]);
+        });
+
+        // "여행 종료" 버튼 클릭 시 명소 검색 실행
+        document.getElementById("end-travel-btn").addEventListener("click", function () {
+            setActiveButton("end-travel-btn");
+            endTravel();
         });
 
         // "즐겨찾기" 버튼 클릭 시 즐겨찾기 리스트 표시 (추후 구현 가능)
