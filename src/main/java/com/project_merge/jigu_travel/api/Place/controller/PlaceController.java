@@ -6,6 +6,7 @@ import com.project_merge.jigu_travel.global.common.BaseResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -38,5 +39,11 @@ public class PlaceController {
             return ResponseEntity.status(404).body(new BaseResponse<>(404, "명소를 찾을 수 없습니다.", null));
         }
         return ResponseEntity.ok(new BaseResponse<>(200, "명소 상세 조회 성공", place));
+    }
+
+    @PostMapping("/upload")
+    public ResponseEntity<String> uploadCsv(@RequestParam("file") MultipartFile file) {
+        placeService.uploadPlacesFromCsv(file);
+        return ResponseEntity.ok("CSV 파일이 성공적으로 업로드되었습니다.");
     }
 }

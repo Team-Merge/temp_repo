@@ -4,6 +4,7 @@ import com.project_merge.jigu_travel.global.common.PlaceType;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 public class PlaceResponseDto {
     private Integer placeId;
-    private PlaceType type;
+    private List<PlaceType> types;
     private String name;
     private String tel;
     private Double latitude;
