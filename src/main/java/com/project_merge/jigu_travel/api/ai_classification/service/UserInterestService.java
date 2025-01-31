@@ -47,18 +47,21 @@ public class UserInterestService {
 
         var recommendations = responseDto.getData().getTop2Recommendations();
         if (recommendations.size() >= 2) {
+            String cleanedInterest1 = recommendations.get(0).replace("category_", ""); // 첫 번째 관심사
+            String cleanedInterest2 = recommendations.get(1).replace("category_", ""); // 두 번째 관심사
+
             if (existingInterest.isPresent()) {
                 // 기존 관심사가 있으면 업데이트
                 UserInterest userInterest = existingInterest.get();
-                userInterest.setInterest(recommendations.get(0));
-                userInterest.setInterest2(recommendations.get(1));
+                userInterest.setInterest(cleanedInterest1);
+                userInterest.setInterest2(cleanedInterest2);
                 userInterestRepository.save(userInterest);
             } else {
                 // 기존 관심사가 없으면 새로 저장
                 UserInterest newUserInterest = UserInterest.builder()
                         .userId(userId)
-                        .interest(recommendations.get(0))
-                        .interest2(recommendations.get(1))
+                        .interest(cleanedInterest1)
+                        .interest2(cleanedInterest2)
                         .build();
                 userInterestRepository.save(newUserInterest);
             }
