@@ -20,7 +20,7 @@ public class Place {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private PlaceType type; // 장소 유형 (ENUM: 맛집, 오락_체험, 힐링, 역사_문화, 쇼핑)
+    private PlaceType type; // 장소 유형 (ENUM: 식도락_여행, 오락_체험_여행, 힐링_여행, 역사_문화_여행, 쇼핑_여행, 캠핑_글램핑_여행)
 
     @Column(nullable = false, length = 255)
     private String name; // 장소 이름
