@@ -10,6 +10,6 @@ public class LocationPageController {
 
     @GetMapping
     public String showMapPage() {
-        return "map"; // map.mustache 템플릿 반환
+        return "map"; // map.html 템플릿 반환
     }
 }
