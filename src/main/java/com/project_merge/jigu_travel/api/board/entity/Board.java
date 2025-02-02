@@ -7,6 +7,8 @@ import com.project_merge.jigu_travel.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -35,4 +37,7 @@ public class Board extends BaseEntity {
 
     @Column(name = "likes")
     private Long likes;
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Attachment> attachments = new ArrayList<>();
 }
