@@ -4,6 +4,7 @@ import com.project_merge.jigu_travel.api.Place.entity.Place;
 import com.project_merge.jigu_travel.api.Place.repository.PlaceRepository;
 import com.project_merge.jigu_travel.api.websocket.dto.responseDto.PlaceResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import com.project_merge.jigu_travel.global.common.PlaceType;
@@ -18,6 +19,8 @@ import java.util.stream.Collectors;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.HashSet;
 
 @Service
@@ -27,8 +30,16 @@ public class PlaceServiceImpl implements PlaceService {
     private final PlaceRepository placeRepository;
 
     @Override
-    public List<PlaceResponseDto> findNearbyPlace(double latitude, double longitude, double radius) {
-        List<Place> places = placeRepository.findNearbyPlace(latitude, longitude, radius);
+    public List<PlaceResponseDto> findNearbyPlace(double latitude, double longitude, double radius, List<String> types) {
+        List<Place> places;
+
+        String joinedtypes = (types == null || types.isEmpty()) ? null : String.join(",", types);
+
+        if (joinedtypes == null || joinedtypes.isEmpty()) {
+            places = placeRepository.findNearbyPlace(latitude, longitude, radius);
+        } else {
+            places = placeRepository.findNearbyPlaceByTypes(latitude, longitude, radius, joinedtypes);
+        }
         return places.stream()
                 .map(this::toPlaceResponseDto)
                 .collect(Collectors.toList());
