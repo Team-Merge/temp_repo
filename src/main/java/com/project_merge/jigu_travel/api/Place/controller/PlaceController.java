@@ -3,12 +3,16 @@ package com.project_merge.jigu_travel.api.Place.controller;
 import com.project_merge.jigu_travel.api.Place.service.PlaceService;
 import com.project_merge.jigu_travel.api.websocket.dto.responseDto.PlaceResponseDto;
 import com.project_merge.jigu_travel.global.common.BaseResponse;
+import com.project_merge.jigu_travel.global.common.PlaceType;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
@@ -23,12 +27,10 @@ public class PlaceController {
             @RequestParam double latitude,
             @RequestParam double longitude,
             @RequestParam(defaultValue = "1.0") double radius,
+            @RequestParam(required = false) List<String> types,
             @RequestHeader("Authorization") String accessToken) {
 
-        List<PlaceResponseDto> places = placeService.findNearbyPlace(latitude, longitude, radius);
-        if (places.isEmpty()) {
-            return ResponseEntity.ok(new BaseResponse<>(200, "주변 명소가 없습니다.", places));
-        }
+        List<PlaceResponseDto> places = placeService.findNearbyPlace(latitude, longitude, radius, types);
         return ResponseEntity.ok(new BaseResponse<>(200, "주변 명소 검색 성공", places));
     }
 
