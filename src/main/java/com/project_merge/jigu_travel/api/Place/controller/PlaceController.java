@@ -49,4 +49,16 @@ public class PlaceController {
         placeService.uploadPlacesFromCsv(file);
         return ResponseEntity.ok("CSV 파일이 성공적으로 업로드되었습니다.");
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<BaseResponse<List<PlaceResponseDto>>> getAllPlaces(
+            @RequestParam double latitude,
+            @RequestParam double longitude,
+            @RequestParam(defaultValue = "3.0") double radius, // 기본 반경 3km
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        List<PlaceResponseDto> places = placeService.findNearbyALLPlaces(latitude, longitude, radius, page, size);
+        return ResponseEntity.ok(new BaseResponse<>(200, "반경 내 장소 조회 성공", places));
+    }
 }

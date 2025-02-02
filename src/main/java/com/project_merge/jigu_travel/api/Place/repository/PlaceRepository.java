@@ -6,6 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
@@ -20,7 +23,7 @@ public interface PlaceRepository extends JpaRepository<Place, Long> {
             "AND p.deleted = false")
     List<Place> findNearbyPlace(double latitude, double longitude, double radius);
 
-    // 특정 PlaceType만 조회 (카테고리 필터 적용)
+// 특정 PlaceType만 조회 (카테고리 필터 적용)
     @Query("SELECT p FROM Place p WHERE " +
             "(6371 * acos(cos(radians(:latitude)) * cos(radians(p.latitude)) * " +
             "cos(radians(p.longitude) - radians(:longitude)) " +
