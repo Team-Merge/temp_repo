@@ -7,4 +7,6 @@ import java.util.UUID;
 
 public interface UserRepository extends JpaRepository<User, UUID> {
     Optional<User> findByLoginIdAndDeletedFalse(String loginId);
+    boolean existsByNickname(String nickname);
+    boolean existsByLoginId(String loginId);
 }

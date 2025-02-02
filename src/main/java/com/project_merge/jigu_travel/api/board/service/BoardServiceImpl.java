@@ -47,6 +47,7 @@ public class BoardServiceImpl implements BoardService {
     private String uploadDir;
 
     // 📌 게시글 목록 조회 (로그인 없이 가능)
+
     public Page<BoardResponseDto> getBoardList(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by("boardId").descending());
         Page<Board> boardPage = boardJpaRepository.findAll(pageRequest);
@@ -113,7 +114,7 @@ public class BoardServiceImpl implements BoardService {
         return attachmentList;
     }
 
-    // 📌 게시글 작성
+    // 게시글 작성
     @Override
     public CommonResponseDto createBoard(CustomUserDetails userDetails, String title, String content, List<MultipartFile> files) {
         User user = userRepository.findByLoginIdAndDeletedFalse(userDetails.getUsername())
@@ -137,7 +138,7 @@ public class BoardServiceImpl implements BoardService {
                 .build();
     }
 
-    // 📌 게시글 수정
+    // 게시글 수정
     @Override
     public BoardUpdateResponseDto modifyBoard(CustomUserDetails userDetails, Long boardId, String title, String content, List<MultipartFile> files, List<String> removedFileNames) {
         User user = userRepository.findByLoginIdAndDeletedFalse(userDetails.getUsername())
@@ -196,8 +197,8 @@ public class BoardServiceImpl implements BoardService {
 
     }
 
-
     // 📌 게시글 삭제
+
     @Override
     public CommonResponseDto boardDeletion(CustomUserDetails userDetails, Long boardId) {
         User user = userRepository.findByLoginIdAndDeletedFalse(userDetails.getUsername())

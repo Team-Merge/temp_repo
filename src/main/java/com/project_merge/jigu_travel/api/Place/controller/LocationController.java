@@ -1,14 +1,14 @@
 package com.project_merge.jigu_travel.api.Place.controller;
 
 import com.project_merge.jigu_travel.api.Place.service.LocationService;
+import com.project_merge.jigu_travel.api.user.service.UserService;
 import com.project_merge.jigu_travel.api.websocket.dto.requestDto.LocationRequestDto;
 import com.project_merge.jigu_travel.global.common.BaseResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @RestController
@@ -16,42 +16,31 @@ import java.util.List;
 public class LocationController {
 
     private final LocationService locationService;
+    private final UserService userService;
 
     // 위치 데이터 저장
     @PostMapping("/user-location")
     public ResponseEntity<BaseResponse<String>> saveUserLocation(
-            @RequestHeader(value = "Authorization", required = false) String userId,
+            @RequestHeader("Authorization") String accessToken,
             @RequestBody LocationRequestDto locationRequestDto) {
-        if (userId == null || userId.isEmpty()) {
-            userId = "anonymous";
-        }
 
-        Double latitude = locationRequestDto.getLatitude();
-        Double longitude = locationRequestDto.getLongitude();
-
-        if (latitude == null || longitude == null) {
+        if (locationRequestDto.getLatitude() == null || locationRequestDto.getLongitude() == null) {
             return ResponseEntity.badRequest().body(new BaseResponse<>(400, "위치 데이터가 누락되었습니다.", null));
         }
 
-        locationService.saveUserLocation(userId, locationRequestDto);
+        UUID userId = userService.getCurrentUserUUID();
+        locationService.saveUserLocation(locationRequestDto);
 
         return ResponseEntity.ok(new BaseResponse<>(200, "위치 저장 성공", "Location saved for user: " + userId));
     }
 
-    // 위치 데이터 반환
-    @GetMapping("/user-location")
-    public ResponseEntity<BaseResponse<List<LocationRequestDto>>> getUserLocation(
-            @RequestHeader(value = "Authorization", required = false) String userId) {
-        if (userId == null || userId.isEmpty()) {
-            userId = "anonymous";
-        }
+    // 여행 종료 시 HashMap 데이터를 DB로 저장하고 메모리에서 삭제
+    @PostMapping("/end-travel")
+    public ResponseEntity<BaseResponse<String>> endTravel(
+            @RequestHeader("Authorization") String accessToken) {
 
-        List<LocationRequestDto> location = locationService.getUserLocation(userId);
-
-        if (location.isEmpty()) {
-            return ResponseEntity.status(404).body(new BaseResponse<>(404, "위치 데이터가 없습니다.", null));
-        }
-
-        return ResponseEntity.ok(new BaseResponse<>(200, "위치 데이터 반환 성공", location));
+        locationService.saveAllUserLocationToDB();
+        UUID userId = userService.getCurrentUserUUID();
+        return ResponseEntity.ok(new BaseResponse<>(200, "여행 데이터 저장 완료", "All location data saved to DB for user: " + userId));
     }
 }
