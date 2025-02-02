@@ -22,7 +22,8 @@ public class PlaceController {
     public ResponseEntity<BaseResponse<List<PlaceResponseDto>>> getNearbyPlace(
             @RequestParam double latitude,
             @RequestParam double longitude,
-            @RequestParam(defaultValue = "1.0") double radius) {
+            @RequestParam(defaultValue = "1.0") double radius,
+            @RequestHeader("Authorization") String accessToken) {
 
         List<PlaceResponseDto> places = placeService.findNearbyPlace(latitude, longitude, radius);
         if (places.isEmpty()) {

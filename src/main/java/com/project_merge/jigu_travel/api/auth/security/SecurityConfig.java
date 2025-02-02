@@ -53,6 +53,7 @@ public class SecurityConfig {
                         .requestMatchers("/ai-guide/**").permitAll()
                         .requestMatchers("/api/ai-guide/**").permitAll()
                         .requestMatchers("/places/upload").permitAll()
+                        .requestMatchers("/api/image/**").permitAll()
                         .requestMatchers("/api/ai/ai_classification/exists").authenticated()
 
                         .anyRequest().authenticated()
