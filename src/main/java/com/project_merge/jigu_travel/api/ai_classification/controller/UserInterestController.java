@@ -12,7 +12,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import com.project_merge.jigu_travel.api.user.service.impl.UserServiceImpl;
 import com.project_merge.jigu_travel.api.ai_classification.repository.UserInterestRepository;
+import com.project_merge.jigu_travel.api.ai_classification.entity.UserInterest;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -57,6 +59,16 @@ public class UserInterestController {
         boolean exists = userInterestRepository.findByUserId(userId).isPresent();
 
         return ResponseEntity.ok(new BaseResponse<>(200, exists ? "관심사가 존재합니다." : "관심사가 없습니다.", exists));
+    }
+
+    @GetMapping("/get-user-interest")
+    public ResponseEntity<BaseResponse<UserInterest>> getUserInterest(@AuthenticationPrincipal UserDetails userDetails) {
+        return Optional.ofNullable(userDetails)
+                .map(details -> userInterestRepository.findByUserId(userService.getCurrentUserUUID())
+                        .map(interest -> ResponseEntity.ok(new BaseResponse<>(200, "사용자의 관심사를 조회했습니다.", interest)))
+                        .orElseGet(() -> ResponseEntity.ok(new BaseResponse<>(200, "사용자의 관심사가 없습니다.", null))))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(new BaseResponse<>(401, "인증되지 않은 사용자", null)));
     }
 
 }
