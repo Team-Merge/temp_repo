@@ -19,6 +19,12 @@ import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.HashSet;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+import lombok.RequiredArgsConstructor;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -99,6 +105,15 @@ public class PlaceServiceImpl implements PlaceService {
         return place;
     }
 
+    @Override
+    public List<PlaceResponseDto> findNearbyALLPlaces(double latitude, double longitude, double radius, int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<Place> places = placeRepository.findNearbyALLPlaces(latitude, longitude, radius, pageRequest);
+
+        return places.getContent().stream()
+                .map(this::toPlaceResponseDto)
+                .collect(Collectors.toList());
+    }
 
 
 }
