@@ -106,9 +106,9 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
-    public List<PlaceResponseDto> findAllPlaces(int page, int size) {
+    public List<PlaceResponseDto> findNearbyALLPlaces(double latitude, double longitude, double radius, int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        Page<Place> places = placeRepository.findAll(pageRequest);
+        Page<Place> places = placeRepository.findNearbyALLPlaces(latitude, longitude, radius, pageRequest);
 
         return places.getContent().stream()
                 .map(this::toPlaceResponseDto)

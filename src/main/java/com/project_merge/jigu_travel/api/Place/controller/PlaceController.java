@@ -50,10 +50,13 @@ public class PlaceController {
 
     @GetMapping("/all")
     public ResponseEntity<BaseResponse<List<PlaceResponseDto>>> getAllPlaces(
-            @RequestParam(defaultValue = "0") int page,  // 현재 페이지 (기본값: 0)
-            @RequestParam(defaultValue = "10") int size // 한 페이지당 개수 (기본값: 10)
+            @RequestParam double latitude,
+            @RequestParam double longitude,
+            @RequestParam(defaultValue = "3.0") double radius, // 기본 반경 3km
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
     ) {
-        List<PlaceResponseDto> places = placeService.findAllPlaces(page, size);
-        return ResponseEntity.ok(new BaseResponse<>(200, "장소 목록 조회 성공", places));
+        List<PlaceResponseDto> places = placeService.findNearbyALLPlaces(latitude, longitude, radius, page, size);
+        return ResponseEntity.ok(new BaseResponse<>(200, "반경 내 장소 조회 성공", places));
     }
 }

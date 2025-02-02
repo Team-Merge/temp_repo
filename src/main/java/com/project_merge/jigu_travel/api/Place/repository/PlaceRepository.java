@@ -20,5 +20,11 @@ public interface PlaceRepository extends JpaRepository<Place, Long> {
             "+ sin(radians(:latitude)) * sin(radians(p.latitude)))) <= :radius " +
             "AND p.deleted = false")
     List<Place> findNearbyPlace(double latitude, double longitude, double radius);
-    Page<Place> findAll(Pageable pageable);
+
+    @Query("SELECT p FROM Place p WHERE " +
+            "(6371 * acos(cos(radians(:latitude)) * cos(radians(p.latitude)) * " +
+            "cos(radians(p.longitude) - radians(:longitude)) " +
+            "+ sin(radians(:latitude)) * sin(radians(p.latitude)))) <= :radius " +
+            "AND p.deleted = false")
+    Page<Place> findNearbyALLPlaces(double latitude, double longitude, double radius, Pageable pageable);
 }
