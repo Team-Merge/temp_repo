@@ -12,4 +12,7 @@ public interface PlaceService {
 
     // CSV 업로드 기능 추가
     void uploadPlacesFromCsv(MultipartFile file);
+
+    List<PlaceResponseDto> findAllPlaces(int page, int size);
+
 }

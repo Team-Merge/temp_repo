@@ -4,6 +4,9 @@ import com.project_merge.jigu_travel.api.Place.entity.Place;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
@@ -17,4 +20,5 @@ public interface PlaceRepository extends JpaRepository<Place, Long> {
             "+ sin(radians(:latitude)) * sin(radians(p.latitude)))) <= :radius " +
             "AND p.deleted = false")
     List<Place> findNearbyPlace(double latitude, double longitude, double radius);
+    Page<Place> findAll(Pageable pageable);
 }

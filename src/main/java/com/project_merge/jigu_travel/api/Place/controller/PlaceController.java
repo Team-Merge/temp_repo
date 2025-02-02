@@ -47,4 +47,13 @@ public class PlaceController {
         placeService.uploadPlacesFromCsv(file);
         return ResponseEntity.ok("CSV 파일이 성공적으로 업로드되었습니다.");
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<BaseResponse<List<PlaceResponseDto>>> getAllPlaces(
+            @RequestParam(defaultValue = "0") int page,  // 현재 페이지 (기본값: 0)
+            @RequestParam(defaultValue = "10") int size // 한 페이지당 개수 (기본값: 10)
+    ) {
+        List<PlaceResponseDto> places = placeService.findAllPlaces(page, size);
+        return ResponseEntity.ok(new BaseResponse<>(200, "장소 목록 조회 성공", places));
+    }
 }

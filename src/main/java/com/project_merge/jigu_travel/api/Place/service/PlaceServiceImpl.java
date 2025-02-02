@@ -19,6 +19,12 @@ import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.HashSet;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+import lombok.RequiredArgsConstructor;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -72,7 +78,7 @@ public class PlaceServiceImpl implements PlaceService {
             for (String[] row : rows) {
                 Place place = mapToPlace(row);
                 placeRepository.save(place);
-                placeRepository.flush(); // 강제로 INSERT 진행
+                placeRepository.flush(); // ✅ 강제로 INSERT 진행
             }
 
         } catch (Exception e) {
@@ -99,6 +105,15 @@ public class PlaceServiceImpl implements PlaceService {
         return place;
     }
 
+    @Override
+    public List<PlaceResponseDto> findAllPlaces(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<Place> places = placeRepository.findAll(pageRequest);
+
+        return places.getContent().stream()
+                .map(this::toPlaceResponseDto)
+                .collect(Collectors.toList());
+    }
 
 
 }
