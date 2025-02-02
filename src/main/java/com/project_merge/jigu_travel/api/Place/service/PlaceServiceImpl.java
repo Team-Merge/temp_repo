@@ -72,7 +72,7 @@ public class PlaceServiceImpl implements PlaceService {
             for (String[] row : rows) {
                 Place place = mapToPlace(row);
                 placeRepository.save(place);
-                placeRepository.flush(); // ✅ 강제로 INSERT 진행
+                placeRepository.flush(); // 강제로 INSERT 진행
             }
 
         } catch (Exception e) {

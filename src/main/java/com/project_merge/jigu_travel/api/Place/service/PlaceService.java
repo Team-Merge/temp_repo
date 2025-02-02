@@ -10,6 +10,6 @@ public interface PlaceService {
 
     PlaceResponseDto findPlaceById(Long placeId);
 
-    // ✅ CSV 업로드 기능 추가
+    // CSV 업로드 기능 추가
     void uploadPlacesFromCsv(MultipartFile file);
 }
