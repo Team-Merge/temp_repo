@@ -8,6 +8,9 @@ import com.project_merge.jigu_travel.exception.CustomException;
 import com.project_merge.jigu_travel.exception.ErrorCode;
 import com.project_merge.jigu_travel.global.common.BaseResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -82,8 +85,12 @@ public class UserController {
 
     /** 전체 사용자 목록 조회 */
     @GetMapping("/all")
-    public ResponseEntity<BaseResponse<List<UserDto>>> getAllUsers() {
-        List<UserDto> users = userRepository.findAll().stream()
+    public ResponseEntity<BaseResponse<Page<UserDto>>> getAllUsers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<UserDto> users = userRepository.findAll(pageable)
                 .map(user -> UserDto.builder()
                         .userId(user.getUserId())
                         .loginId(user.getLoginId())
@@ -92,11 +99,11 @@ public class UserController {
                         .gender(user.getGender())
                         .location(user.getLocation())
                         .role(user.getRole())
-                        .build())  // isAdmin()은 UserDto에서 자동 계산됨
-                .toList();
+                        .build());
 
         return ResponseEntity.ok(new BaseResponse<>(200, "전체 사용자 조회 성공", users));
     }
+
 
     @PostMapping("/set-admin")
     public ResponseEntity<BaseResponse<String>> setAdmin(@RequestParam UUID userId, @RequestParam String role) {
@@ -104,7 +111,7 @@ public class UserController {
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         try {
-            Role newRole = Role.valueOf(role);  // 🚨 올바른 ENUM 값인지 체크
+            Role newRole = Role.valueOf(role);  // 올바른 ENUM 값인지 체크
             user.setRole(newRole);
             userRepository.save(user);
         } catch (IllegalArgumentException e) {
