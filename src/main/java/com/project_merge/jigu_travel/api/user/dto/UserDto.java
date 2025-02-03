@@ -20,5 +20,8 @@ public class UserDto {
     private Gender gender;
     private Location location;
     private Role role;
-    private boolean isAdmin;
+
+    public boolean getIsAdmin() {
+        return this.role == Role.ROLE_ADMIN;
+    }
 }
