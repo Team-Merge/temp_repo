@@ -29,7 +29,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
         String requestURI = request.getRequestURI();
 
-        if (requestURI.startsWith("/css/") || requestURI.startsWith("/js/") || requestURI.startsWith("/home/") || requestURI.startsWith("/images/") || requestURI.startsWith("/auth/register") || requestURI.startsWith("/auth/login") || requestURI.equals("/api/user/check-nickname") || requestURI.equals("/place/upload")) {
+        if (requestURI.startsWith("/css/") || requestURI.startsWith("/js/") || requestURI.startsWith("/home/") || requestURI.startsWith("/images/") || requestURI.startsWith("/auth/register") || requestURI.startsWith("/auth/login") || requestURI.equals("/api/user/check-nickname") || requestURI.equals("/place/upload") || requestURI.equals("/visitor")) {
             filterChain.doFilter(request, response);
             return;
         }
