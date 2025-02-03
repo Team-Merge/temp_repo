@@ -119,4 +119,8 @@ public class User extends BaseEntity {
         return this.role == Role.ROLE_ADMIN;
     }
 
+    //이메일 추가
+    @Column(nullable = false)
+    private String email;
+
 }

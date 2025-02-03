@@ -12,4 +12,5 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     boolean existsByNickname(String nickname);
     boolean existsByLoginId(String loginId);
     Page<User> findAll(Pageable pageable);
+    Optional<User> findByEmailAndDeletedFalse(String email); // 이메일로 사용자 찾기
 }

@@ -64,6 +64,9 @@ dependencies {
 	//open cv
 	implementation 'com.opencsv:opencsv:5.7.1'
 
+	// Spring Boot Starter Mail (이메일 전송)
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+
 }
 
 tasks.named('test') {
