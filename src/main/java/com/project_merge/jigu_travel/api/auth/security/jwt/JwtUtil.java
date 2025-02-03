@@ -121,4 +121,14 @@ public class JwtUtil {
             return true; // 예외 발생 시 만료된 것으로 처리
         }
     }
+
+    /**비밀번호 재설정 토큰 생성**/
+    public String generatePasswordResetToken(String loginId) {
+        return Jwts.builder()
+                .setSubject(loginId)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 30)) // 30분 유효
+                .signWith(getSigningKey())
+                .compact();
+    }
 }
