@@ -6,8 +6,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 
 @Service
 @RequiredArgsConstructor
@@ -47,8 +53,16 @@ public class VisitorService {
     }
 
     // 특정 날짜 방문자 수 조회
-    public long getVisitorCountByDate(LocalDate date) {
-        return visitorCountRepository.countByVisitDate(date);
+    public long getVisitorCountByDate(String date, String ip) {
+        LocalDate visitDate = LocalDate.parse(date);
+
+        if (ip != null && !ip.isEmpty()) {
+            // 특정 IP 방문자 수 조회
+            return visitorCountRepository.countVisitorByDateAndIp(visitDate, ip);
+        } else {
+            // 전체 방문자 수 조회
+            return visitorCountRepository.countVisitorByDate(visitDate);
+        }
     }
 
     // 특정 IP의 오늘 방문 횟수 조회
@@ -73,5 +87,61 @@ public class VisitorService {
     public List<VisitorCount> getAllVisitorRecords() {
         return visitorCountRepository.findAll();
     }
+
+    // 특정 날짜의 모든 방문 횟수 합산
+    public long getTotalVisitCountByDate(String date, String ip) {
+        LocalDate visitDate = LocalDate.parse(date);
+
+        if (ip != null && !ip.isEmpty()) {
+            // 특정 IP의 방문 횟수 합산
+            return visitorCountRepository.sumVisitCountByDateAndIp(visitDate, ip);
+        } else {
+            // 전체 방문 횟수 합산
+            return visitorCountRepository.sumVisitCountByDate(visitDate);
+        }
+    }
+
+    // 방문자 전체 기록 조회 (페이지네이션 및 검색 가능)
+    public Page<VisitorCount> getVisitorRecordsWithPagination(
+            int page, int size, String startDate, String endDate, String ip) {
+
+        LocalDate start = LocalDate.parse(startDate);
+        LocalDate end = LocalDate.parse(endDate);
+        Pageable pageable = PageRequest.of(page, size);
+
+        // IP 검색 여부에 따라 다르게 처리
+        if (ip != null && !ip.isEmpty()) {
+            return visitorCountRepository.findByVisitDateBetweenAndIpContaining(start, end, ip, pageable);
+        } else {
+            return visitorCountRepository.findByVisitDateBetween(start, end, pageable);
+        }
+    }
+
+    public Map<Integer, Long> getVisitCountByHour(String startDate, String endDate, String ip) {
+        LocalDateTime startDateTime = LocalDate.parse(startDate).atStartOfDay();
+        LocalDateTime endDateTime = LocalDate.parse(endDate).atTime(23, 59, 59);
+
+        Map<Integer, Long> visitCountByHour = new HashMap<>();
+        for (int i = 0; i < 24; i++) {
+            visitCountByHour.put(i, 0L);
+        }
+
+        List<VisitorCount> records;
+        if (ip != null && !ip.isEmpty()) {
+            // 특정 IP의 방문 기록 조회
+            records = visitorCountRepository.findByCreatedAtBetweenAndIp(startDateTime, endDateTime, ip);
+        } else {
+            // 모든 방문 기록 조회
+            records = visitorCountRepository.findByCreatedAtBetween(startDateTime, endDateTime);
+        }
+
+        for (VisitorCount record : records) {
+            int hour = record.getCreatedAt().getHour();
+            visitCountByHour.put(hour, visitCountByHour.get(hour) + 1);
+        }
+
+        return visitCountByHour;
+    }
+
 
 }
