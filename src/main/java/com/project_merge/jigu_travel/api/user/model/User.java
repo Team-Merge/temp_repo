@@ -54,4 +54,8 @@ public class User extends BaseEntity {  // ✅ BaseEntity 상속 추가
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Auth> authList = new ArrayList<>();
+
+    //이메일 추가
+    @Column(nullable = false)
+    private String email;
 }
