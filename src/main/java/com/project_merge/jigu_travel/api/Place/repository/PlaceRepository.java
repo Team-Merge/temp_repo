@@ -35,4 +35,11 @@ public interface PlaceRepository extends JpaRepository<Place, Long> {
             double longitude,
             double radius,
             @Param("types") String types);
+    
+    @Query("SELECT p FROM Place p WHERE " +
+        "(6371 * acos(cos(radians(:latitude)) * cos(radians(p.latitude)) * " +
+        "cos(radians(p.longitude) - radians(:longitude)) " +
+        "+ sin(radians(:latitude)) * sin(radians(p.latitude)))) <= :radius " +
+        "AND p.deleted = false")
+    Page<Place> findNearbyALLPlaces(double latitude, double longitude, double radius, Pageable pageable);
 }
