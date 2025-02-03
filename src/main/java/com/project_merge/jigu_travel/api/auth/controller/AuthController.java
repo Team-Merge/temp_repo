@@ -3,9 +3,12 @@ package com.project_merge.jigu_travel.api.auth.controller;
 import com.project_merge.jigu_travel.api.auth.dto.*;
 import com.project_merge.jigu_travel.api.auth.model.Auth;
 import com.project_merge.jigu_travel.api.auth.service.AuthService;
+import com.project_merge.jigu_travel.api.user.model.User;
+import com.project_merge.jigu_travel.api.user.repository.UserRepository;
 import com.project_merge.jigu_travel.exception.CustomException;
 import com.project_merge.jigu_travel.exception.ErrorCode;
 import com.project_merge.jigu_travel.global.common.BaseResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -29,6 +32,7 @@ public class AuthController {
     private final AuthService authService;
     private final JwtUtil jwtUtil;
     private final AuthRepository authRepository;
+    private final UserRepository userRepository;
 
     @Value("${jwt.refresh-expiration}")
     private int refreshexpiration;
@@ -149,5 +153,31 @@ public class AuthController {
         }
     }
 
+    /**아이디 존재 여부 확인 : 있으면 이메일 반환**/
+    @GetMapping("/check-user")
+    public ResponseEntity<?> checkUserExists(@RequestParam String loginId) {
+        System.out.println("❗️아이디 여부 확인 : "+loginId);
+        User user = userRepository.findByLoginIdAndDeletedFalse(loginId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        System.out.println("❗️아이디 여부 확인 : "+loginId+ " / email : "+user.getEmail());
+
+        return ResponseEntity.ok().body(Map.of("email", user.getEmail()));
+    }
+
+    /** 비밀번호 재설정 요청 **/
+    @PostMapping("/password-reset-request")
+    public ResponseEntity<String> requestPasswordReset(@RequestBody PasswordResetRequestDto requestDto) {
+        System.out.println("📌전송 이메일 주소 : "+requestDto.getEmail());
+        authService.requestPasswordResetByEmail(requestDto.getEmail());
+        return ResponseEntity.ok("비밀번호 재설정 이메일이 발송되었습니다.");
+    }
+
+    /** 비밀번호 재설정 **/
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestBody @Valid PasswordResetDto passwordResetDto) {
+        authService.resetPassword(passwordResetDto);
+        return ResponseEntity.ok("비밀번호가 성공적으로 변경되었습니다.");
+    }
 
 }

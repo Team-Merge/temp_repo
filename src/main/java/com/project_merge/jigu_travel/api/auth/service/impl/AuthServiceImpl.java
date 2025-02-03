@@ -2,12 +2,14 @@ package com.project_merge.jigu_travel.api.auth.service.impl;
 
 import com.project_merge.jigu_travel.api.auth.dto.LoginRequestDto;
 import com.project_merge.jigu_travel.api.auth.dto.LoginResponseDto;
+import com.project_merge.jigu_travel.api.auth.dto.PasswordResetDto;
 import com.project_merge.jigu_travel.api.auth.dto.RegisterRequestDto;
 import com.project_merge.jigu_travel.api.auth.model.Auth;
 import com.project_merge.jigu_travel.api.auth.model.AuthType;
 import com.project_merge.jigu_travel.api.auth.repository.AuthRepository;
 import com.project_merge.jigu_travel.api.auth.security.jwt.JwtUtil;
 import com.project_merge.jigu_travel.api.auth.service.AuthService;
+import com.project_merge.jigu_travel.api.auth.service.EmailService;
 import com.project_merge.jigu_travel.api.user.model.Location;
 import com.project_merge.jigu_travel.api.user.model.Role;
 import com.project_merge.jigu_travel.api.user.model.User;
@@ -30,6 +32,7 @@ public class AuthServiceImpl implements AuthService {
     private final AuthRepository authRepository;
     private final JwtUtil jwtUtil;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final EmailService emailService;
 
     @Transactional  // 트랜잭션 추가
     @Override
@@ -77,6 +80,7 @@ public class AuthServiceImpl implements AuthService {
                 .birthDate(request.getBirthDate())
                 .location(locationValue)
                 .role(Role.ROLE_USER)
+                .email(request.getEmail())  // 이메일 저장
                 .build();
 
         userRepository.save(user);
@@ -133,4 +137,53 @@ public class AuthServiceImpl implements AuthService {
 
         return newAccessToken;
     }
+
+
+    /** 이메일을 이용한 비밀번호 찾기**/
+    @Override
+    @Transactional
+    public void requestPasswordResetByEmail(String email) {
+        User user = userRepository.findByEmailAndDeletedFalse(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        // 새로운 비밀번호 재설정 토큰 생성
+        String resetToken = jwtUtil.generatePasswordResetToken(user.getLoginId());
+
+        // 기존 비밀번호 재설정 토큰 삭제 후 새로 저장
+        authRepository.deleteByUser(user);
+        authRepository.save(Auth.builder()
+                .user(user)
+                .authType(AuthType.LOCAL)
+                .accessToken(resetToken)
+                .refreshToken("passwordReset")
+                .createdAt(LocalDateTime.now())
+                .build()
+        );
+
+        // 이메일 전송
+        emailService.sendPasswordResetEmail(user.getEmail(), resetToken);
+    }
+
+    /** 비밀번호 재설정 **/
+    @Override
+    @Transactional
+    public void resetPassword(PasswordResetDto passwordResetDto) {
+        String loginId = jwtUtil.validateToken(passwordResetDto.getToken());
+        if (loginId == null) {
+            throw new CustomException(ErrorCode.INVALID_TOKEN);
+        }
+
+        User user = userRepository.findByLoginIdAndDeletedFalse(loginId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        // 비밀번호 변경 후 저장
+        user.setPassword(passwordEncoder.encode(passwordResetDto.getNewPassword()));
+        userRepository.save(user);
+
+        // 기존 비밀번호 재설정 토큰 삭제
+        authRepository.deleteByUser(user);
+    }
+
+
+
 }
