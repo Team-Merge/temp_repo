@@ -64,9 +64,7 @@ public class PlaceServiceImpl implements PlaceService {
     private PlaceResponseDto toPlaceResponseDto(Place place) {
         return PlaceResponseDto.builder()
                 .placeId(place.getPlaceId().intValue())
-                .types(place.getTypeList().stream()
-                        .map(PlaceType::valueOf)
-                        .toList())
+                .types(place.getTypeList())
                 .name(place.getName())
                 .tel(place.getTel())
                 .latitude(place.getLatitude())
