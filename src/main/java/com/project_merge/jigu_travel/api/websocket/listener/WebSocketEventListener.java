@@ -31,12 +31,12 @@ public class WebSocketEventListener {
         logger.info("Received a new web-socket connection");
         MessageHeaderAccessor accessor = NativeMessageHeaderAccessor.getAccessor(event.getMessage(),
                 SimpMessageHeaderAccessor.class);
-        GenericMessage<?> generic = (GenericMessage<?>) accessor.getHeader("simpConnectMessage");
-        logger.info("generic = {}", generic);
-        Map<String, Object> nativeHeaders = (Map<String, Object>) generic.getHeaders().get("nativeHeaders");
-        logger.info("nativeHeader = {}", nativeHeaders);
-        String accessToken = ((List<String>) nativeHeaders.get("accessToken")).get(0);
-        logger.info("accessToken = {}", accessToken);
+//        GenericMessage<?> generic = (GenericMessage<?>) accessor.getHeader("simpConnectMessage");
+//        logger.info("generic = {}", generic);
+//        Map<String, Object> nativeHeaders = (Map<String, Object>) generic.getHeaders().get("nativeHeaders");
+//        logger.info("nativeHeader = {}", nativeHeaders);
+//        String accessToken = ((List<String>) nativeHeaders.get("accessToken")).get(0);
+//        logger.info("accessToken = {}", accessToken);
 
         // 서버 관리
         //
