@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import com.project_merge.jigu_travel.api.Place.dto.responseDto.CategoryCountDto;
 
 @RequiredArgsConstructor
 @RestController
@@ -140,6 +141,13 @@ public class PlaceController {
         response.put("totalPages", places.getTotalPages()); // 전체 페이지 수
 
         return ResponseEntity.ok(new BaseResponse<>(200, "삭제된 장소 조회 성공", response));
+    }
+
+    @GetMapping("/count-by-category")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<BaseResponse<List<CategoryCountDto>>> getPlacesCountByCategory() {
+        List<CategoryCountDto> categoryCounts = placeService.getPlacesCountByCategory();
+        return ResponseEntity.ok(new BaseResponse<>(200, "카테고리별 장소 수 조회 성공", categoryCounts));
     }
 
 }

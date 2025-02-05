@@ -67,4 +67,6 @@ public class Place extends BaseEntity { // BaseEntity 상속
                 ", address='" + address + '\'' +
                 '}';
     }
+
+
 }
