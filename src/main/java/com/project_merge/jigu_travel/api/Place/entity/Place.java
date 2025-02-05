@@ -13,7 +13,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Place extends BaseEntity { // ✅ BaseEntity 상속
+public class Place extends BaseEntity { // BaseEntity 상속
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long placeId; // 장소 ID (Primary Key)

@@ -41,7 +41,7 @@ public class PlaceServiceImpl implements PlaceService {
 
         String types1 = (types != null && types.size() > 0) ? types.get(0) : null; // 첫 번째 관심사
         String types2 = (types != null && types.size() > 1) ? types.get(1) : null; // 두 번째 관심사
-        String combinedTypes = (types1 != null && types2 != null) ? types1 + "," + types2 : null;  // ✅ 조합된 문자열 생성
+        String combinedTypes = (types1 != null && types2 != null) ? types1 + "," + types2 : null;  // 조합된 문자열 생성
 
         if (types1 == null && types2 == null) {
             places = placeRepository.findNearbyPlace(latitude, longitude, radius);
@@ -144,11 +144,11 @@ public class PlaceServiceImpl implements PlaceService {
         Pageable pageable = PageRequest.of(page, size);
         Page<Place> places;
 
-        // ✅ 검색어가 없으면 전체 조회
+        // 검색어가 없으면 전체 조회
         if (searchQuery == null || searchQuery.isEmpty()) {
             places = includeDeleted ? placeRepository.findAll(pageable) : placeRepository.findByDeletedFalse(pageable);
         } else {
-            // ✅ 검색 기준에 따라 조회
+            // 검색 기준에 따라 조회
             switch (searchBy) {
                 case "name":
                     places = includeDeleted ? placeRepository.findByNameContainingIgnoreCase(searchQuery, pageable)
@@ -213,7 +213,7 @@ public class PlaceServiceImpl implements PlaceService {
         }
 
         Place place = placeOptional.get();
-        boolean newStatus = !place.isDeleted(); // ✅ 현재 상태 반전
+        boolean newStatus = !place.isDeleted(); // 현재 상태 반전
         place.setDeleted(newStatus);
         placeRepository.save(place);
 
@@ -229,7 +229,7 @@ public class PlaceServiceImpl implements PlaceService {
             return false; // 404 처리용
         }
 
-        placeRepository.deleteById(placeId); // ✅ 완전 삭제
+        placeRepository.deleteById(placeId); // 완전 삭제
         return true;
     }
 
@@ -238,7 +238,7 @@ public class PlaceServiceImpl implements PlaceService {
     public Page<PlaceResponseDto> findDeletedPlaces(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Place> places = placeRepository.findDeletedPlaces(pageable);
-        return places.map(this::toPlaceResponseDto); // ✅ Page 그대로 반환
+        return places.map(this::toPlaceResponseDto); // Page 그대로 반환
     }
 
 
