@@ -10,10 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
-import org.springframework.messaging.handler.annotation.Header;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.handler.annotation.*;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,8 +41,10 @@ public class SocketController {
     }
 
     @MessageMapping("/place")
-    public void sendNearPlace(@Header("Authorization") String accessToken, @Payload LocationRequestDto locationRequestDto) {
-        logger.info("Request Location Message. serviceUUID : {}, latitude : {}, longitude : {}", locationRequestDto.getServiceUUID(), locationRequestDto.getLatitude(), locationRequestDto.getLongitude());
+    public void sendNearPlace(SimpMessageHeaderAccessor headerAccessor, @Payload LocationRequestDto locationRequestDto) {
+
+        String accessToken = headerAccessor.getFirstNativeHeader("Authorization");
+        logger.info("Request Location Message. serviceUUID : {}, latitude : {}, longitude : {}, interests={}", locationRequestDto.getServiceUUID(), locationRequestDto.getLatitude(), locationRequestDto.getLongitude(), locationRequestDto.getInterests());
 
         if(locationRequestDto.getLatitude() == null) throw new IllegalArgumentException();
 
