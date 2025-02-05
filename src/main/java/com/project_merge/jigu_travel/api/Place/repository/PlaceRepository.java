@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PlaceRepository extends JpaRepository<Place, Long> {
@@ -42,11 +43,37 @@ public interface PlaceRepository extends JpaRepository<Place, Long> {
             @Param("types2") String types2,
             @Param("combinedTypes") String combinedTypes);
 
-    
+    // 삭제되지 않은 장소만 조회
+    Page<Place> findByDeletedFalse(Pageable pageable);
+
+    // 삭제 여부와 관계없이 반경 내 장소 조회
     @Query("SELECT p FROM Place p WHERE " +
-        "(6371 * acos(cos(radians(:latitude)) * cos(radians(p.latitude)) * " +
-        "cos(radians(p.longitude) - radians(:longitude)) " +
-        "+ sin(radians(:latitude)) * sin(radians(p.latitude)))) <= :radius " +
-        "AND p.deleted = false")
+            "(6371 * acos(cos(radians(:latitude)) * cos(radians(p.latitude)) * " +
+            "cos(radians(p.longitude) - radians(:longitude)) + sin(radians(:latitude)) * sin(radians(p.latitude)))) <= :radius")
+    Page<Place> findNearbyALLPlacesIncludingDeleted(double latitude, double longitude, double radius, Pageable pageable);
+
+    // 삭제되지 않은 장소만 조회
+    @Query("SELECT p FROM Place p WHERE " +
+            "(6371 * acos(cos(radians(:latitude)) * cos(radians(p.latitude)) * " +
+            "cos(radians(p.longitude) - radians(:longitude)) + sin(radians(:latitude)) * sin(radians(p.latitude)))) <= :radius " +
+            "AND p.deleted = false")
     Page<Place> findNearbyALLPlaces(double latitude, double longitude, double radius, Pageable pageable);
+
+    Optional<Place> findByNameAndAddress(String name, String address);
+
+    // 삭제되지 않은 장소만 조회
+    @Query("SELECT p FROM Place p WHERE p.deleted = false")
+    List<Place> findAllActivePlaces();
+
+    // 삭제된 장소만 조회하는 페이징 쿼리
+    @Query("SELECT p FROM Place p WHERE p.deleted = true")
+    Page<Place> findDeletedPlaces(Pageable pageable);
+
+    Page<Place> findByNameContainingIgnoreCaseAndDeletedFalse(String name, Pageable pageable);
+    Page<Place> findByTypesContainingIgnoreCaseAndDeletedFalse(String type, Pageable pageable);
+    Page<Place> findByAddressContainingIgnoreCaseAndDeletedFalse(String address, Pageable pageable);
+
+    Page<Place> findByNameContainingIgnoreCase(String name, Pageable pageable);
+    Page<Place> findByTypesContainingIgnoreCase(String type, Pageable pageable);
+    Page<Place> findByAddressContainingIgnoreCase(String address, Pageable pageable);
 }
