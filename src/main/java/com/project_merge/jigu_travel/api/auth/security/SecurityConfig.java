@@ -49,6 +49,8 @@ public class SecurityConfig {
                         .requestMatchers("/board/**").authenticated() //
                         .requestMatchers("/ws/**", "/stomp-ws/**").permitAll()
                         .requestMatchers("/pub/**", "/sub/**").permitAll()
+                        .requestMatchers("/place/delete/**").hasRole("ADMIN")
+                        .requestMatchers("/api/user/set-admin").hasRole("ADMIN")
                         .requestMatchers("/location/**", "/place/**").permitAll()
                         .requestMatchers("/ai-guide/**").permitAll()
                         .requestMatchers("/api/ai-guide/**").permitAll()
@@ -58,8 +60,7 @@ public class SecurityConfig {
                         .requestMatchers("/visitor/records").permitAll()
                         .requestMatchers("/visitor/count").permitAll()
                         .requestMatchers("/api/ai/ai_classification/exists").authenticated()
-                        .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers("/api/user/set-admin").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
 //                        .requestMatchers("**").permitAll()
 
                         .anyRequest().authenticated()
