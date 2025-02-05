@@ -46,6 +46,7 @@ public class UserController {
                 .location(user.getLocation())
                 .role(user.getRole())
                 .build();
+        System.out.println("현재 로그인 권한" + user.getRole());
 
         return ResponseEntity.ok(new BaseResponse<>(200, "사용자 정보 조회 성공", userDto));
     }
