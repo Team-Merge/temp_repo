@@ -120,7 +120,7 @@ public class User extends BaseEntity {
     }
 
     //이메일 추가
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String email;
 
 }
