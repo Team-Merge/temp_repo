@@ -16,25 +16,32 @@ import java.util.List;
 public interface PlaceRepository extends JpaRepository<Place, Long> {
 
     // 반경 내 모든 명소 검색 (Haversine Formula 활용)
-    @Query("SELECT p FROM Place p WHERE " +
+    @Query("SELECT DISTINCT p FROM Place p WHERE " +
             "(6371 * acos(cos(radians(:latitude)) * cos(radians(p.latitude)) * " +
             "cos(radians(p.longitude) - radians(:longitude)) " +
             "+ sin(radians(:latitude)) * sin(radians(p.latitude)))) <= :radius " +
             "AND p.deleted = false")
     List<Place> findNearbyPlace(double latitude, double longitude, double radius);
 
-// 특정 PlaceType만 조회 (카테고리 필터 적용)
-    @Query("SELECT p FROM Place p WHERE " +
+    // 특정 PlaceType만 조회 (카테고리 필터 적용)
+    @Query("SELECT DISTINCT p FROM Place p WHERE " +
             "(6371 * acos(cos(radians(:latitude)) * cos(radians(p.latitude)) * " +
             "cos(radians(p.longitude) - radians(:longitude)) " +
             "+ sin(radians(:latitude)) * sin(radians(p.latitude)))) <= :radius " +
             "AND p.deleted = false " +
-            "AND (:types IS NULL OR p.types LIKE CONCAT('%', :types, '%'))")
+            "AND (" +
+            "p.types LIKE CONCAT('%', :types1, '%') " + //개별
+            "OR p.types LIKE CONCAT('%', :types2, '%') " +  //개별
+            "OR p.types LIKE CONCAT('%', :combinedTypes, '%')" + //다중
+            ")")
     List<Place> findNearbyPlaceByTypes(
             double latitude,
             double longitude,
             double radius,
-            @Param("types") String types);
+            @Param("types1") String types1,
+            @Param("types2") String types2,
+            @Param("combinedTypes") String combinedTypes);
+
     
     @Query("SELECT p FROM Place p WHERE " +
         "(6371 * acos(cos(radians(:latitude)) * cos(radians(p.latitude)) * " +

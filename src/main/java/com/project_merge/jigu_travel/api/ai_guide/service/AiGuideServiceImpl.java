@@ -1,6 +1,7 @@
 package com.project_merge.jigu_travel.api.ai_guide.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.project_merge.jigu_travel.api.Place.service.LocationService;
 import com.project_merge.jigu_travel.api.ai_classification.entity.UserInterest;
 import com.project_merge.jigu_travel.api.ai_classification.repository.UserInterestRepository;
 import com.project_merge.jigu_travel.api.ai_guide.dto.AudioResponse;
@@ -10,6 +11,7 @@ import com.project_merge.jigu_travel.api.ai_guide.entity.ConversationHistory;
 import com.project_merge.jigu_travel.api.ai_guide.fast.FastApiClient;
 import com.project_merge.jigu_travel.api.ai_guide.repository.ConversationHistoryRepository;
 import com.project_merge.jigu_travel.api.user.service.UserService;
+import com.project_merge.jigu_travel.api.websocket.dto.requestDto.LocationRequestDto;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,6 +31,7 @@ public class AiGuideServiceImpl implements AiGuideService {
     private final UserService userService;
     private final FastApiClient fastApiClient;
     private final UserInterestRepository interestRepository;
+    private final LocationService locationService;
 
 
     // 텍스트 질문 처리
@@ -93,13 +96,13 @@ public class AiGuideServiceImpl implements AiGuideService {
     //대화 기록 처리 함수
     @Override
     public List<ConversationHistory> handleChatHistory( int offset, int limit) {
-        System.out.println("서비스 확인");
+//        System.out.println("서비스 확인");
         //getConversationHistoryFromSession(session);
         UUID userId = userService.getCurrentUserUUID();
         Pageable pageable = PageRequest.of(offset / limit, limit); // offset을 limit으로 나눠서 페이지 번호로 설정
         Page<ConversationHistory> pageResult = conversationHistoryRepository.findByUserIdOrderByConversationDatetimeDesc(userId, pageable);
         // 콘솔에 페이지 결과 출력
-        System.out.println("Page Result: " + pageResult.getContent());
+//        System.out.println("Page Result: " + pageResult.getContent());
         return pageResult.getContent();  // 페이지에서 내용만 가져옴
     }
 
@@ -143,10 +146,20 @@ public class AiGuideServiceImpl implements AiGuideService {
             List<String> category = Arrays.asList(userInterest.get().getInterest(),userInterest.get().getInterest2());
             userInput.setUser_category(category);
         }else{
+            System.out.println("‼️사용자 선호 카테고리 없음 : 기본 값으로 설정‼");
             userInput.setUser_category(Arrays.asList("맛집", "힐링")); //테스트용 기본값
         }
-        userInput.setLatitude(37.508373); // 수정 예정
-        userInput.setLongitude(127.103565); // 수정 예정
+
+        LocationRequestDto lastUserLocation = locationService.getLastUserLocation();
+        if(lastUserLocation != null) {
+            userInput.setLatitude(lastUserLocation.getLatitude());
+            userInput.setLongitude(lastUserLocation.getLongitude());
+        }else{
+            System.out.println("‼️최근 사용자 위치 받아오기 실패 : 기본 위치로 설정‼");
+            userInput.setLatitude(37.508373); // 기본 위치
+            userInput.setLongitude(127.103565); // 기본 위치
+        }
+
         userInput.setConversation_history(conversationHistory);
         return userInput;
     }

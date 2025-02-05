@@ -54,7 +54,13 @@ public class SecurityConfig {
                         .requestMatchers("/api/ai-guide/**").permitAll()
                         .requestMatchers("/places/upload").permitAll()
                         .requestMatchers("/api/image/**").permitAll()
+                        .requestMatchers("/visitor/**").permitAll()
+                        .requestMatchers("/visitor/records").permitAll()
+                        .requestMatchers("/visitor/count").permitAll()
                         .requestMatchers("/api/ai/ai_classification/exists").authenticated()
+                        .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/api/user/set-admin").hasAuthority("ROLE_ADMIN")
+//                        .requestMatchers("**").permitAll()
 
                         .anyRequest().authenticated()
                 )

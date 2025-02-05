@@ -22,6 +22,9 @@ public class RegisterRequestDto {
     @NotBlank(message = "닉네임은 필수 입력값입니다.")
     private String nickname;
 
+    @NotBlank(message = "이메일은 필수 입력값입니다.")
+    private String email;
+
     private String birthDate; // "YYYY-MM-DD"
     private Gender gender;
     private Location location = Location.KOR;
