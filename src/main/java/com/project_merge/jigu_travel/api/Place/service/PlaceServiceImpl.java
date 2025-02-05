@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import java.util.List;
 import java.util.stream.Collectors;
+import com.project_merge.jigu_travel.api.Place.dto.responseDto.CategoryCountDto;
 
 @Service
 @RequiredArgsConstructor
@@ -239,6 +240,22 @@ public class PlaceServiceImpl implements PlaceService {
         Pageable pageable = PageRequest.of(page, size);
         Page<Place> places = placeRepository.findDeletedPlaces(pageable);
         return places.map(this::toPlaceResponseDto); // Page 그대로 반환
+    }
+
+    @Override
+    public List<CategoryCountDto> getPlacesCountByCategory() {
+        Object[] result = placeRepository.countPlacesByCategory().get(0);
+
+        List<CategoryCountDto> categoryCounts = new ArrayList<>();
+        String[] categoryNames = {
+                "식도락_여행", "오락_체험_여행", "힐링_여행", "역사_문화_여행", "쇼핑_여행", "캠핑_글램핑_여행"
+        };
+
+        for (int i = 0; i < categoryNames.length; i++) {
+            categoryCounts.add(new CategoryCountDto(categoryNames[i], ((Number) result[i]).longValue()));
+        }
+
+        return categoryCounts;
     }
 
 

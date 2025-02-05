@@ -5,6 +5,7 @@ import com.project_merge.jigu_travel.api.websocket.dto.responseDto.PlaceResponse
 import com.project_merge.jigu_travel.global.common.PlaceType;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
+import com.project_merge.jigu_travel.api.Place.dto.responseDto.CategoryCountDto;
 
 import java.util.List;
 
@@ -27,5 +28,7 @@ public interface PlaceService {
     boolean permanentlyDeletePlace(Long placeId);
 
     Page<PlaceResponseDto> findDeletedPlaces(int page, int size);
+
+    List<CategoryCountDto> getPlacesCountByCategory();
 
 }
