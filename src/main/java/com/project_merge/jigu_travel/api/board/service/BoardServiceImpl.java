@@ -59,6 +59,7 @@ public class BoardServiceImpl implements BoardService {
                 .title(board.getTitle())
                 .content(board.getContent())
                 .likes(board.getLikes())
+                .createdAt(board.getCreatedAt())
                 .build());
     }
     // 파일 저장 메서드
@@ -241,6 +242,7 @@ public class BoardServiceImpl implements BoardService {
                 .nickname(board.getUser().getNickname())
                 .title(board.getTitle())
                 .content(board.getContent())
+                .createdAt(board.getCreatedAt())
                 .attachments(attachments)
                 .build();
     }

@@ -7,6 +7,7 @@ import com.project_merge.jigu_travel.global.common.BaseResponse;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -27,6 +28,7 @@ public class SocketController {
 
     private static final Logger logger = LoggerFactory.getLogger(SocketController.class);
 
+    @Autowired
     private SocketServiceImpl socketServiceImpl;
 
     @GetMapping("/init")

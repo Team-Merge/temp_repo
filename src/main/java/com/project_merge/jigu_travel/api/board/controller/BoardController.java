@@ -24,11 +24,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/board")
+@RequestMapping("/api/board")
 public class BoardController {
 
     private final BoardServiceImpl boardServiceImpl;
@@ -38,18 +40,26 @@ public class BoardController {
      */
     @GetMapping("/list")
     @ResponseBody
-    public ResponseEntity<BaseResponse<Page<BoardResponseDto>>> getAllBoard(
+    public ResponseEntity<BaseResponse<Map<String, Object>>> getAllBoard(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size) {
+            @RequestParam(defaultValue = "10") int size) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         System.out.println("[DEBUG] SecurityContext Authentication: " + authentication);
 
         Page<BoardResponseDto> boardPage = boardServiceImpl.getBoardList(page, size);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("currentPage", boardPage.getNumber());   // 현재 페이지
+        response.put("totalPages", boardPage.getTotalPages()); // 전체 페이지 수
+        response.put("totalItems", boardPage.getTotalElements()); // 전체 게시글 수
+        response.put("size", boardPage.getSize()); // 페이지 크기
+        response.put("posts", boardPage.getContent()); // 현재 페이지의 게시글 데이터
+
         return ResponseEntity.status(HttpStatus.OK)
-                .body(BaseResponse.<Page<BoardResponseDto>>builder()
+                .body(BaseResponse.<Map<String, Object>>builder()
                         .code(HttpStatus.OK.value())
-                        .data(boardPage)
+                        .data(response)
                         .build());
     }
 
