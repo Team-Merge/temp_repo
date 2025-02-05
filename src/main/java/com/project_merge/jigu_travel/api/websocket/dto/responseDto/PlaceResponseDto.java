@@ -13,7 +13,7 @@ import java.util.List;
 @Setter
 public class PlaceResponseDto {
     private Integer placeId;
-    private List<PlaceType> types;
+    private List<String> types;
     private String name;
     private String tel;
     private Double latitude;

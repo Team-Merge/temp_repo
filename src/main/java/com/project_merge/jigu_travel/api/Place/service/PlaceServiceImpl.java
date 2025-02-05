@@ -4,6 +4,7 @@ import com.project_merge.jigu_travel.api.Place.entity.Place;
 import com.project_merge.jigu_travel.api.Place.repository.PlaceRepository;
 import com.project_merge.jigu_travel.api.websocket.dto.responseDto.PlaceResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import com.project_merge.jigu_travel.global.common.PlaceType;
@@ -18,6 +19,8 @@ import java.util.stream.Collectors;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.HashSet;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,8 +36,19 @@ public class PlaceServiceImpl implements PlaceService {
     private final PlaceRepository placeRepository;
 
     @Override
-    public List<PlaceResponseDto> findNearbyPlace(double latitude, double longitude, double radius) {
-        List<Place> places = placeRepository.findNearbyPlace(latitude, longitude, radius);
+    public List<PlaceResponseDto> findNearbyPlace(double latitude, double longitude, double radius, List<String> types) {
+        List<Place> places;
+
+        String types1 = (types != null && types.size() > 0) ? types.get(0) : null; // 첫 번째 관심사
+        String types2 = (types != null && types.size() > 1) ? types.get(1) : null; // 두 번째 관심사
+        String combinedTypes = (types1 != null && types2 != null) ? types1 + "," + types2 : null;  // ✅ 조합된 문자열 생성
+
+        if (types1 == null && types2 == null) {
+            places = placeRepository.findNearbyPlace(latitude, longitude, radius);
+        } else {
+            places = placeRepository.findNearbyPlaceByTypes(latitude, longitude, radius, types1, types2, combinedTypes);
+        }
+
         return places.stream()
                 .map(this::toPlaceResponseDto)
                 .collect(Collectors.toList());
@@ -50,9 +64,7 @@ public class PlaceServiceImpl implements PlaceService {
     private PlaceResponseDto toPlaceResponseDto(Place place) {
         return PlaceResponseDto.builder()
                 .placeId(place.getPlaceId().intValue())
-                .types(place.getTypeList().stream()
-                        .map(PlaceType::valueOf)
-                        .toList())
+                .types(place.getTypeList())
                 .name(place.getName())
                 .tel(place.getTel())
                 .latitude(place.getLatitude())

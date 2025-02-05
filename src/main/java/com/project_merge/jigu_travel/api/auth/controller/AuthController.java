@@ -3,9 +3,12 @@ package com.project_merge.jigu_travel.api.auth.controller;
 import com.project_merge.jigu_travel.api.auth.dto.*;
 import com.project_merge.jigu_travel.api.auth.model.Auth;
 import com.project_merge.jigu_travel.api.auth.service.AuthService;
+import com.project_merge.jigu_travel.api.user.model.User;
+import com.project_merge.jigu_travel.api.user.repository.UserRepository;
 import com.project_merge.jigu_travel.exception.CustomException;
 import com.project_merge.jigu_travel.exception.ErrorCode;
 import com.project_merge.jigu_travel.global.common.BaseResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -29,17 +32,18 @@ public class AuthController {
     private final AuthService authService;
     private final JwtUtil jwtUtil;
     private final AuthRepository authRepository;
+    private final UserRepository userRepository;
 
     @Value("${jwt.refresh-expiration}")
     private int refreshexpiration;
 
-    /** ✅ 로그인 - RefreshToken을 쿠키에 저장 */
+    /** 로그인 - RefreshToken을 쿠키에 저장 */
     @PostMapping("/login")
     public ResponseEntity<BaseResponse<LoginResponseDto>> login(@RequestBody LoginRequestDto loginRequest, HttpServletResponse response) {
         try {
             LoginResponseDto loginResponse = authService.login(loginRequest);
 
-            // ✅ Refresh Token을 HttpOnly 쿠키에 저장
+            // Refresh Token을 HttpOnly 쿠키에 저장
             Cookie refreshTokenCookie = new Cookie("refreshToken", loginResponse.getRefreshToken());
             refreshTokenCookie.setHttpOnly(true);
             refreshTokenCookie.setSecure(true);
@@ -48,7 +52,7 @@ public class AuthController {
 
             response.addCookie(refreshTokenCookie);
 
-            System.out.println("✅ 로그인 성공, 새 Access Token: " + loginResponse.getAccessToken());
+            System.out.println(" 로그인 성공, 새 Access Token: " + loginResponse.getAccessToken());
 
             return ResponseEntity.ok(new BaseResponse<>(200, "로그인 성공", loginResponse));
         } catch (CustomException e) {
@@ -57,7 +61,7 @@ public class AuthController {
         }
     }
 
-    /** ✅ 회원가입 */
+    /** 회원가입 */
     @PostMapping("/register")
     public ResponseEntity<BaseResponse<Void>> register(@RequestBody RegisterRequestDto registerRequest) {
         try {
@@ -69,7 +73,7 @@ public class AuthController {
         }
     }
 
-    /** ✅ 로그아웃 - RefreshToken 쿠키 삭제 + AccessToken 무효화 */
+    /** 로그아웃 - RefreshToken 쿠키 삭제 + AccessToken 무효화 */
     @PostMapping("/logout")
     public ResponseEntity<BaseResponse<Void>> logout(
             HttpServletRequest request,
@@ -84,7 +88,7 @@ public class AuthController {
                 authService.logout(accessToken);
             }
 
-            // ✅ Refresh Token 쿠키 삭제
+            // Refresh Token 쿠키 삭제
             Cookie refreshTokenCookie = new Cookie("refreshToken", null);
             refreshTokenCookie.setHttpOnly(true);
             refreshTokenCookie.setSecure(true);
@@ -99,13 +103,13 @@ public class AuthController {
         }
     }
 
-    /** ✅ Refresh Token을 사용하여 Access Token 갱신 */
+    /** Refresh Token을 사용하여 Access Token 갱신 */
     @PostMapping("/refresh")
     public ResponseEntity<BaseResponse<RefreshTokenResponseDto>> refreshAccessToken(HttpServletRequest request) {
-        System.out.println("🔄 Refresh Token 요청 수신");
+        System.out.println("Refresh Token 요청 수신");
 
         try {
-            // ✅ 1. 쿠키에서 Refresh Token 가져오기
+            // 1. 쿠키에서 Refresh Token 가져오기
             Cookie[] cookies = request.getCookies();
             String refreshToken = null;
 
@@ -121,26 +125,26 @@ public class AuthController {
                 throw new CustomException(ErrorCode.INVALID_TOKEN);
             }
 
-            // ✅ 2. Refresh Token 검증 (토큰 서명 & 만료 여부 확인)
+            // 2. Refresh Token 검증 (토큰 서명 & 만료 여부 확인)
             if (!jwtUtil.validateRefreshToken(refreshToken)) {
                 throw new CustomException(ErrorCode.INVALID_TOKEN);
             }
 
-            // ✅ 3. DB에서 Refresh Token이 저장되어 있는지 확인
+            // 3. DB에서 Refresh Token이 저장되어 있는지 확인
             Auth auth = authRepository.findByRefreshToken(refreshToken)
                     .orElseThrow(() -> new CustomException(ErrorCode.INVALID_TOKEN));
 
-            // ✅ 4. 새 Access Token 발급
+            // 4. 새 Access Token 발급
             String loginId = auth.getUser().getLoginId();
             String newAccessToken = jwtUtil.generateToken(loginId);
 
-            // ✅ 5. Access Token을 DB에 업데이트
+            // 5. Access Token을 DB에 업데이트
             auth.setAccessToken(newAccessToken);
-            authRepository.save(auth); // ✅ DB에 저장
+            authRepository.save(auth); // DB에 저장
 
             RefreshTokenResponseDto responseDto = new RefreshTokenResponseDto(newAccessToken);
 
-            System.out.println("✅ 새로운 Access Token 발급 및 DB 저장 완료: " + newAccessToken);
+            System.out.println("새로운 Access Token 발급 및 DB 저장 완료: " + newAccessToken);
 
             return ResponseEntity.ok(new BaseResponse<>(200, "새로운 Access Token 발급 성공", responseDto));
         } catch (CustomException e) {
@@ -149,5 +153,31 @@ public class AuthController {
         }
     }
 
+    /**아이디 존재 여부 확인 : 있으면 이메일 반환**/
+    @GetMapping("/check-user")
+    public ResponseEntity<?> checkUserExists(@RequestParam String loginId) {
+        System.out.println("❗️아이디 여부 확인 : "+loginId);
+        User user = userRepository.findByLoginIdAndDeletedFalse(loginId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        System.out.println("❗️아이디 여부 확인 : "+loginId+ " / email : "+user.getEmail());
+
+        return ResponseEntity.ok().body(Map.of("email", user.getEmail()));
+    }
+
+    /** 비밀번호 재설정 요청 **/
+    @PostMapping("/password-reset-request")
+    public ResponseEntity<String> requestPasswordReset(@RequestBody PasswordResetRequestDto requestDto) {
+        System.out.println("📌전송 이메일 주소 : "+requestDto.getEmail());
+        authService.requestPasswordResetByEmail(requestDto.getEmail());
+        return ResponseEntity.ok("비밀번호 재설정 이메일이 발송되었습니다.");
+    }
+
+    /** 비밀번호 재설정 **/
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestBody @Valid PasswordResetDto passwordResetDto) {
+        authService.resetPassword(passwordResetDto);
+        return ResponseEntity.ok("비밀번호가 성공적으로 변경되었습니다.");
+    }
 
 }

@@ -1,8 +1,10 @@
 package com.project_merge.jigu_travel.api.Place.repository;
 
 import com.project_merge.jigu_travel.api.Place.entity.Place;
+import com.project_merge.jigu_travel.global.common.PlaceType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,18 +15,38 @@ import java.util.List;
 @Repository
 public interface PlaceRepository extends JpaRepository<Place, Long> {
 
-    // 반경 내 명소 검색 (Haversine Formula 활용)
-    @Query("SELECT p FROM Place p WHERE " +
+    // 반경 내 모든 명소 검색 (Haversine Formula 활용)
+    @Query("SELECT DISTINCT p FROM Place p WHERE " +
             "(6371 * acos(cos(radians(:latitude)) * cos(radians(p.latitude)) * " +
             "cos(radians(p.longitude) - radians(:longitude)) " +
             "+ sin(radians(:latitude)) * sin(radians(p.latitude)))) <= :radius " +
             "AND p.deleted = false")
     List<Place> findNearbyPlace(double latitude, double longitude, double radius);
 
-    @Query("SELECT p FROM Place p WHERE " +
+    // 특정 PlaceType만 조회 (카테고리 필터 적용)
+    @Query("SELECT DISTINCT p FROM Place p WHERE " +
             "(6371 * acos(cos(radians(:latitude)) * cos(radians(p.latitude)) * " +
             "cos(radians(p.longitude) - radians(:longitude)) " +
             "+ sin(radians(:latitude)) * sin(radians(p.latitude)))) <= :radius " +
-            "AND p.deleted = false")
+            "AND p.deleted = false " +
+            "AND (" +
+            "p.types LIKE CONCAT('%', :types1, '%') " + //개별
+            "OR p.types LIKE CONCAT('%', :types2, '%') " +  //개별
+            "OR p.types LIKE CONCAT('%', :combinedTypes, '%')" + //다중
+            ")")
+    List<Place> findNearbyPlaceByTypes(
+            double latitude,
+            double longitude,
+            double radius,
+            @Param("types1") String types1,
+            @Param("types2") String types2,
+            @Param("combinedTypes") String combinedTypes);
+
+    
+    @Query("SELECT p FROM Place p WHERE " +
+        "(6371 * acos(cos(radians(:latitude)) * cos(radians(p.latitude)) * " +
+        "cos(radians(p.longitude) - radians(:longitude)) " +
+        "+ sin(radians(:latitude)) * sin(radians(p.latitude)))) <= :radius " +
+        "AND p.deleted = false")
     Page<Place> findNearbyALLPlaces(double latitude, double longitude, double radius, Pageable pageable);
 }
