@@ -38,7 +38,7 @@ public class Place {
     private String address; // 주소
 
     @Column(nullable = false)
-    private boolean deleted = false; // 폐업 여부 (기본값: false)
+    private boolean deleted = false; // 삭제 여부 (기본값: false)
 
     @Column(nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now(); // 생성 일자
