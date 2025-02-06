@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -46,6 +47,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/user-info").permitAll()
                         .requestMatchers("/board/list").permitAll()
+                        .requestMatchers("/api/board/**").permitAll()
                         .requestMatchers("/board/**").authenticated() //
                         .requestMatchers("/ws/**", "/stomp-ws/**").permitAll()
                         .requestMatchers("/pub/**", "/sub/**").permitAll()
@@ -60,6 +62,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/ai/ai_classification/exists").authenticated()
                         .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
                         .requestMatchers("/api/user/set-admin").hasAuthority("ROLE_ADMIN")
+
 //                        .requestMatchers("**").permitAll()
 
                         .anyRequest().authenticated()
@@ -87,6 +90,13 @@ public class SecurityConfig {
                 "http://127.0.0.1:5173", "http://localhost:5173", "http://13.209.3.228:8080", "https://13.209.3.228:8080","http://127.0.0.1:4173", "http://localhost:4173", "http://localhost:5174",
                 "http://jigu-travel.kro.kr", "https://jigu-travel.kro.kr", "http://15.164.4.29:5173", "https://15.164.4.29:5173", "http://15.164.4.29:4173", "https://15.164.4.29:4173", "http://192.168.56.1:5173"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+        configuration.setAllowedHeaders(List.of(
+                "Authorization",
+                "Content-Type",
+                "Accept",
+                "Origin",
+                "X-Requested-With"
+        ));
         configuration.setExposedHeaders(List.of(
                 "Authorization",
                 "Sec-WebSocket-Accept",
@@ -94,7 +104,7 @@ public class SecurityConfig {
                 "Sec-WebSocket-Version",
                 "Sec-WebSocket-Protocol"
         ));
-
+        
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setExposedHeaders(List.of("Authorization"));
 

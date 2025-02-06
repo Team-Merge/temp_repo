@@ -1,5 +1,6 @@
 package com.project_merge.jigu_travel.api.board.service;
 
+import com.nimbusds.jose.util.Resource;
 import com.project_merge.jigu_travel.api.auth.model.CustomUserDetails;
 import com.project_merge.jigu_travel.api.board.dto.reponseDto.AttachmentDto;
 import com.project_merge.jigu_travel.api.board.dto.reponseDto.BoardResponseDto;
@@ -16,14 +17,20 @@ import com.project_merge.jigu_travel.api.user.service.UserService;
 import com.project_merge.jigu_travel.global.common.CommonResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -58,6 +65,7 @@ public class BoardServiceImpl implements BoardService {
                 .nickname(board.getUser().getNickname())
                 .title(board.getTitle())
                 .content(board.getContent())
+                .inquiryType(board.getInquiryType())
                 .likes(board.getLikes())
                 .createdAt(board.getCreatedAt())
                 .build());
@@ -115,9 +123,10 @@ public class BoardServiceImpl implements BoardService {
         return attachmentList;
     }
 
+
     // 게시글 작성
     @Override
-    public CommonResponseDto createBoard(CustomUserDetails userDetails, String title, String content, List<MultipartFile> files) {
+    public CommonResponseDto createBoard(CustomUserDetails userDetails, String title, String content, String inquiryType, List<MultipartFile> files) {
         User user = userRepository.findByLoginIdAndDeletedFalse(userDetails.getUsername())
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
@@ -125,6 +134,7 @@ public class BoardServiceImpl implements BoardService {
                 .user(user)
                 .title(title)
                 .content(content)
+                .inquiryType(inquiryType)
                 .likes(0L)
                 .build();
 
@@ -141,7 +151,7 @@ public class BoardServiceImpl implements BoardService {
 
     // 게시글 수정
     @Override
-    public BoardUpdateResponseDto modifyBoard(CustomUserDetails userDetails, Long boardId, String title, String content, List<MultipartFile> files, List<String> removedFileNames) {
+    public BoardUpdateResponseDto modifyBoard(CustomUserDetails userDetails, Long boardId, String title, String content, String inquiryType, List<MultipartFile> files, List<String> removedFileNames) {
         User user = userRepository.findByLoginIdAndDeletedFalse(userDetails.getUsername())
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
@@ -189,11 +199,13 @@ public class BoardServiceImpl implements BoardService {
 
         board.setTitle(title);
         board.setContent(content);
+        board.setInquiryType(inquiryType);
         boardJpaRepository.save(board);
 
         return BoardUpdateResponseDto.builder()
                 .title(board.getTitle())
                 .content(board.getContent())
+                .inquiryType(board.getInquiryType())
                 .build();
 
     }
@@ -225,10 +237,6 @@ public class BoardServiceImpl implements BoardService {
         Board board = boardJpaRepository.findById(boardId)
                 .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
 
-        // ✅ 첨부파일 리스트 변환
-//        List<AttachmentDto> attachments = board.getAttachments().stream()
-//                .map(att -> new AttachmentDto(att.getFileId(), att.getFileName(), att.getFileSize()))
-//                .toList();
         // ✅ 첨부파일이 `null`이면 빈 리스트 반환
         List<AttachmentDto> attachments = board.getAttachments() != null ?
                 board.getAttachments().stream()
@@ -242,6 +250,7 @@ public class BoardServiceImpl implements BoardService {
                 .nickname(board.getUser().getNickname())
                 .title(board.getTitle())
                 .content(board.getContent())
+                .inquiryType(board.getInquiryType())
                 .createdAt(board.getCreatedAt())
                 .attachments(attachments)
                 .build();
