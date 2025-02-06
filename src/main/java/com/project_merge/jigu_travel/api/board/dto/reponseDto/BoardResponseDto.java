@@ -28,5 +28,7 @@ public class BoardResponseDto {
 
     private LocalDateTime createdAt;
 
+    private String inquiryType;
+
 
 }

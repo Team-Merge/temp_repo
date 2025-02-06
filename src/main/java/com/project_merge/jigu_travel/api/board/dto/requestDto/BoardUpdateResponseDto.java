@@ -10,4 +10,5 @@ import lombok.*;
 public class BoardUpdateResponseDto {
     private String title;
     private String content;
+    private String inquiryType;
 }

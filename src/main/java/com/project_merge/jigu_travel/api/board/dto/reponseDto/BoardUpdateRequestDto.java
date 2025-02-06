@@ -11,4 +11,5 @@ public class BoardUpdateRequestDto {
     private Long boardId;
     private String title;
     private String content;
+    private String inquiryType;
 }
