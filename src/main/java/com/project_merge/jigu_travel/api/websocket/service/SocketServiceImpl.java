@@ -27,12 +27,15 @@ public class SocketServiceImpl implements SocketService{
     public void sendMessage(String accessToken, LocationRequestDto locationRequestDto) {
         String destination = getDestination(locationRequestDto.getServiceUUID());
 
-        List<String> types = new ArrayList<>();
-        types.add("힐링_여행");
-        types.add("쇼핑_여행");
+        List<String> types = locationRequestDto.getInterests();
+
+        if (types == null || types.isEmpty()) {
+            types = new ArrayList<>();
+            types.add("힐링_여행");
+            types.add("쇼핑_여행");
+        }
 
         List<PlaceResponseDto> result = placeServiceImpl.findNearbyPlace(locationRequestDto.getLatitude(), locationRequestDto.getLongitude(), 1, types);
-
         messagingTemplate.convertAndSend(destination, result);
     }
 
