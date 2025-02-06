@@ -44,7 +44,7 @@ public class SocketController {
     public void sendNearPlace(SimpMessageHeaderAccessor headerAccessor, @Payload LocationRequestDto locationRequestDto) {
 
         String accessToken = headerAccessor.getFirstNativeHeader("Authorization");
-        logger.info("Request Location Message. serviceUUID : {}, latitude : {}, longitude : {}, interests={}", locationRequestDto.getServiceUUID(), locationRequestDto.getLatitude(), locationRequestDto.getLongitude(), locationRequestDto.getInterests());
+        logger.info("Request Location Message. serviceUUID : {}, latitude : {}, longitude : {}", locationRequestDto.getServiceUUID(), locationRequestDto.getLatitude(), locationRequestDto.getLongitude());
 
         if(locationRequestDto.getLatitude() == null) throw new IllegalArgumentException();
 

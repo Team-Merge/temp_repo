@@ -2,7 +2,6 @@ package com.project_merge.jigu_travel.api.websocket.dto.requestDto;
 
 import lombok.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -14,5 +13,4 @@ public class LocationRequestDto {
     private UUID serviceUUID;
     private Double latitude;
     private Double longitude;
-    private List<String> interests;
 }

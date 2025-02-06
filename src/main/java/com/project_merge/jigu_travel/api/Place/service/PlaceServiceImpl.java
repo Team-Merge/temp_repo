@@ -40,19 +40,25 @@ public class PlaceServiceImpl implements PlaceService {
     public List<PlaceResponseDto> findNearbyPlace(double latitude, double longitude, double radius, List<String> types) {
         List<Place> places;
 
-        String types1 = (types != null && types.size() > 0) ? types.get(0) : null; // 첫 번째 관심사
-        String types2 = (types != null && types.size() > 1) ? types.get(1) : null; // 두 번째 관심사
-        String combinedTypes = (types1 != null && types2 != null) ? types1 + "," + types2 : null;  // 조합된 문자열 생성
-
-        if (types1 == null && types2 == null) {
+        // 📌 관심사가 null이거나 빈 리스트이면 기본 장소 검색 실행
+        if (types == null || types.isEmpty()) {
             places = placeRepository.findNearbyPlace(latitude, longitude, radius);
         } else {
+            // 관심사 기반으로 필터링
+            String types1 = (types.size() > 0) ? types.get(0) : null;
+            String types2 = (types.size() > 1) ? types.get(1) : null;
+            String combinedTypes = (types1 != null && types2 != null) ? types1 + "," + types2 : null;
             places = placeRepository.findNearbyPlaceByTypes(latitude, longitude, radius, types1, types2, combinedTypes);
         }
 
         return places.stream()
                 .map(this::toPlaceResponseDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PlaceResponseDto> findNearbyPlace(double latitude, double longitude, double radius) {
+        return findNearbyPlace(latitude, longitude, radius, new ArrayList<>()); // 빈 리스트를 넘김
     }
 
     @Override
