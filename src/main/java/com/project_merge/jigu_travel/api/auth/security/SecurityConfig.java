@@ -39,6 +39,8 @@ public class SecurityConfig {
                         .requestMatchers("/", "/home").permitAll()
                         .requestMatchers("/api/user/check-nickname").permitAll()
                         .requestMatchers("/api/user/check-loginId").permitAll()
+                        .requestMatchers("/api/user/admin/delete/**").hasRole("ADMIN")
+                        .requestMatchers("/api/user/delete/**").authenticated()
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers("/auth/login", "/auth/register").permitAll()
                         .requestMatchers("/login", "/register").permitAll()
