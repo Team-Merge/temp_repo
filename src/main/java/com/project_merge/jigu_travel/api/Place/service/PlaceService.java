@@ -12,6 +12,8 @@ import java.util.List;
 public interface PlaceService {
     List<PlaceResponseDto> findNearbyPlace(double latitude, double longitude, double radius, List<String> types);
 
+    List<PlaceResponseDto> findNearbyPlace(double latitude, double longitude, double radius);
+
     PlaceResponseDto findPlaceById(Long placeId);
 
     // CSV 업로드 기능 추가
