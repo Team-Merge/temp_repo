@@ -1,5 +1,6 @@
 package com.project_merge.jigu_travel.api.websocket.service;
 
+import com.project_merge.jigu_travel.api.Place.service.PlaceServiceImpl;
 import com.project_merge.jigu_travel.api.websocket.dto.requestDto.LocationRequestDto;
 import com.project_merge.jigu_travel.api.websocket.dto.responseDto.PlaceResponseDto;
 import com.project_merge.jigu_travel.api.websocket.dto.responseDto.SubscribeInitResponseDto;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,12 +20,14 @@ public class SocketServiceImpl implements SocketService{
     @Autowired
     private SimpMessageSendingOperations messagingTemplate;
 
+    @Autowired
+    private PlaceServiceImpl placeServiceImpl;
+
     @Override
     public void sendMessage(String accessToken, LocationRequestDto locationRequestDto) {
         String destination = getDestination(locationRequestDto.getServiceUUID());
 
-        List<PlaceResponseDto> result = null;
-
+        List<PlaceResponseDto> result = placeServiceImpl.findNearbyPlace(locationRequestDto.getLatitude(), locationRequestDto.getLongitude(), 1);
         messagingTemplate.convertAndSend(destination, result);
     }
 

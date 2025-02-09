@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -38,6 +39,10 @@ public class SecurityConfig {
                         .requestMatchers("/", "/home").permitAll()
                         .requestMatchers("/api/user/check-nickname").permitAll()
                         .requestMatchers("/api/user/check-loginId").permitAll()
+                        .requestMatchers("/api/user/admin/delete/**").hasRole("ADMIN")
+                        .requestMatchers("/api/user/admin/restore/**").hasRole("ADMIN")
+                        .requestMatchers("/api/user/admin/stats/today").hasRole("ADMIN")
+                        .requestMatchers("/api/user/delete/**").authenticated()
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers("/auth/login", "/auth/register").permitAll()
                         .requestMatchers("/login", "/register").permitAll()
@@ -46,9 +51,15 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/user-info").permitAll()
                         .requestMatchers("/board/list").permitAll()
+                        .requestMatchers("/api/board/**").permitAll()
                         .requestMatchers("/board/**").authenticated() //
                         .requestMatchers("/ws/**", "/stomp-ws/**").permitAll()
                         .requestMatchers("/pub/**", "/sub/**").permitAll()
+                        .requestMatchers("/place/delete/**").hasRole("ADMIN")
+                        .requestMatchers("/place/permanent-delete/**").hasRole("ADMIN")
+                        .requestMatchers("/place/deleted/**").hasRole("ADMIN")
+                        .requestMatchers("/place/update/**").hasRole("ADMIN")
+                        .requestMatchers("/api/user/set-admin").hasRole("ADMIN")
                         .requestMatchers("/location/**", "/place/**").permitAll()
                         .requestMatchers("/ai-guide/**").permitAll()
                         .requestMatchers("/api/ai-guide/**").permitAll()
@@ -58,8 +69,13 @@ public class SecurityConfig {
                         .requestMatchers("/visitor/records").permitAll()
                         .requestMatchers("/visitor/count").permitAll()
                         .requestMatchers("/api/ai/ai_classification/exists").authenticated()
+
                         .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
                         .requestMatchers("/api/user/set-admin").hasAuthority("ROLE_ADMIN")
+
+
+//                         .requestMatchers("/admin/**").hasRole("ADMIN")
+
 //                        .requestMatchers("**").permitAll()
 
                         .anyRequest().authenticated()
@@ -85,8 +101,15 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("http://127.0.0.1:8080", "http://localhost:8080", "https://jiangxy.github.io","http://127.0.0.1:8000", "http://localhost:8000",
                 "http://127.0.0.1:5173", "http://localhost:5173", "http://13.209.3.228:8080", "https://13.209.3.228:8080","http://127.0.0.1:4173", "http://localhost:4173", "http://localhost:5174",
-                "http://jigu-travel.kro.kr", "https://jigu-travel.kro.kr", "http://15.164.4.29:5173", "https://15.164.4.29:5173", "http://15.164.4.29:4173", "https://15.164.4.29:4173"));
+                "http://jigu-travel.kro.kr", "https://jigu-travel.kro.kr", "http://15.164.4.29:5173", "https://15.164.4.29:5173", "http://15.164.4.29:4173", "https://15.164.4.29:4173", "http://192.168.56.1:5173"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+        configuration.setAllowedHeaders(List.of(
+                "Authorization",
+                "Content-Type",
+                "Accept",
+                "Origin",
+                "X-Requested-With"
+        ));
         configuration.setExposedHeaders(List.of(
                 "Authorization",
                 "Sec-WebSocket-Accept",
@@ -94,7 +117,7 @@ public class SecurityConfig {
                 "Sec-WebSocket-Version",
                 "Sec-WebSocket-Protocol"
         ));
-
+        
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setExposedHeaders(List.of("Authorization"));
 

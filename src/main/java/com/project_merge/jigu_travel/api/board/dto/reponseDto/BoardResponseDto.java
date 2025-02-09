@@ -2,6 +2,7 @@ package com.project_merge.jigu_travel.api.board.dto.reponseDto;
 
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @AllArgsConstructor
@@ -24,4 +25,10 @@ public class BoardResponseDto {
     private Long likes;
 
     private List<AttachmentDto> attachments;
+
+    private LocalDateTime createdAt;
+
+    private String inquiryType;
+
+
 }

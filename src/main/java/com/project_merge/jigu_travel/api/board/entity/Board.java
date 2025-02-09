@@ -35,6 +35,9 @@ public class Board extends BaseEntity {
     @Column(name = "content")
     private String content;
 
+    @Column(name = "inquiryType")
+    private String inquiryType;
+
     @Column(name = "likes")
     private Long likes;
 
