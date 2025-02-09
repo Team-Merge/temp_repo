@@ -18,8 +18,8 @@ import java.util.UUID;
 @Entity
 public class UserLocation {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(name = "user_id", nullable = false)
     private UUID userId;
