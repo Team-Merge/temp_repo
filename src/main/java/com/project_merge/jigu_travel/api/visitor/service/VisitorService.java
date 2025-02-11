@@ -34,7 +34,7 @@ public class VisitorService {
             VisitorCount visitor = existingVisit.get();
             visitor.setVisitCount(visitor.getVisitCount() + 1);
             visitorCountRepository.save(visitor);
-            System.out.println("기존 방문자: " + visitorIp + " | 방문 횟수: " + visitor.getVisitCount());
+
         } else {
             // 새로운 방문 기록 저장 (최초 방문)
             VisitorCount visitor = VisitorCount.builder()
@@ -43,7 +43,7 @@ public class VisitorService {
                     .visitCount(1)
                     .build();
             visitorCountRepository.save(visitor);
-            System.out.println("신규 방문자: " + visitorIp);
+
         }
     }
 
@@ -82,10 +82,6 @@ public class VisitorService {
             ip = request.getRemoteAddr();
         }
         return ip;
-    }
-
-    public List<VisitorCount> getAllVisitorRecords() {
-        return visitorCountRepository.findAll();
     }
 
     // 특정 날짜의 모든 방문 횟수 합산

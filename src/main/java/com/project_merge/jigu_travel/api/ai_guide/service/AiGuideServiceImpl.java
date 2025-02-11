@@ -68,10 +68,6 @@ public class AiGuideServiceImpl implements AiGuideService {
             // 세션에서 대화 기록 가져오기
             UserInputRequest.ConversationHistory conversationHistory = getConversationHistoryFromSession(session);
 
-            // 로그 출력
-            System.out.println("FastAPI 요청 시작...");
-            System.out.println("audioFile name: " + audioFile.getOriginalFilename());
-
             // UserInput 생성
             UserInputRequest userInput = createUserInput(" ", conversationHistory);
 
@@ -87,7 +83,6 @@ public class AiGuideServiceImpl implements AiGuideService {
 
             return response; // FastAPI 응답 그대로 반환
         } catch (Exception e) {
-            System.out.println("Error during API call: " + e.getMessage());
             e.printStackTrace();
             throw new RuntimeException("API 요청 실패");
         }
@@ -96,13 +91,9 @@ public class AiGuideServiceImpl implements AiGuideService {
     //대화 기록 처리 함수
     @Override
     public List<ConversationHistory> handleChatHistory( int offset, int limit) {
-//        System.out.println("서비스 확인");
-        //getConversationHistoryFromSession(session);
         UUID userId = userService.getCurrentUserUUID();
         Pageable pageable = PageRequest.of(offset / limit, limit); // offset을 limit으로 나눠서 페이지 번호로 설정
         Page<ConversationHistory> pageResult = conversationHistoryRepository.findByUserIdOrderByConversationDatetimeDesc(userId, pageable);
-        // 콘솔에 페이지 결과 출력
-//        System.out.println("Page Result: " + pageResult.getContent());
         return pageResult.getContent();  // 페이지에서 내용만 가져옴
     }
 
@@ -122,7 +113,6 @@ public class AiGuideServiceImpl implements AiGuideService {
         history.setConversationDatetime(LocalDateTime.now());
 
         conversationHistoryRepository.save(history);
-        System.out.println("DB 저장 완료");
     }
 
 
@@ -140,13 +130,11 @@ public class AiGuideServiceImpl implements AiGuideService {
     private UserInputRequest createUserInput(String userQuestion, UserInputRequest.ConversationHistory conversationHistory) {
         UserInputRequest userInput = new UserInputRequest();
         userInput.setUser_question(userQuestion);
-//        userInput.setUser_category(Arrays.asList("맛집", "힐링"));
         Optional<UserInterest> userInterest = interestRepository.findByUserId(userService.getCurrentUserUUID());
         if(userInterest.isPresent()) {
             List<String> category = Arrays.asList(userInterest.get().getInterest(),userInterest.get().getInterest2());
             userInput.setUser_category(category);
         }else{
-            System.out.println("‼️사용자 선호 카테고리 없음 : 기본 값으로 설정‼");
             userInput.setUser_category(Arrays.asList("맛집", "힐링")); //테스트용 기본값
         }
 
@@ -155,7 +143,6 @@ public class AiGuideServiceImpl implements AiGuideService {
             userInput.setLatitude(lastUserLocation.getLatitude());
             userInput.setLongitude(lastUserLocation.getLongitude());
         }else{
-            System.out.println("‼️최근 사용자 위치 받아오기 실패 : 기본 위치로 설정‼");
             userInput.setLatitude(37.508373); // 기본 위치
             userInput.setLongitude(127.103565); // 기본 위치
         }

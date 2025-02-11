@@ -2,7 +2,6 @@ package com.project_merge.jigu_travel.api.auth.dto;
 
 import com.project_merge.jigu_travel.api.user.model.Gender;
 import com.project_merge.jigu_travel.api.user.model.Location;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

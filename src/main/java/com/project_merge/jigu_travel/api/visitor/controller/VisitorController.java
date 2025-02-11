@@ -7,8 +7,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
-import java.time.LocalDate;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -48,13 +46,6 @@ public class VisitorController {
         long count = visitorService.getVisitorCountByDate(date, ip);
         return new BaseResponse<>(200, date + " 방문자 수 조회 성공", count);
     }
-
-//    // 방문자 전체 기록 조회 API (관리자용)
-//    @GetMapping("/records")
-//    public BaseResponse<List<VisitorCount>> getVisitorRecords() {
-//        List<VisitorCount> records = visitorService.getAllVisitorRecords();
-//        return new BaseResponse<>(200, "방문자 전체 기록 조회 성공", records);
-//    }
 
     // 특정 날짜 방문 횟수 합산 API
     @GetMapping("/total-visit-count")

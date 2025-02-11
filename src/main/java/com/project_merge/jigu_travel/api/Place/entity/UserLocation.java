@@ -29,6 +29,7 @@ public class UserLocation {
 
     private LocalDateTime timestamp = LocalDateTime.now(); // 자동 생성 시간
 
+    // List<LocationRequestDto>를 JSON 문자열로 변환
     public void setLocations(List<LocationRequestDto> locationList) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();

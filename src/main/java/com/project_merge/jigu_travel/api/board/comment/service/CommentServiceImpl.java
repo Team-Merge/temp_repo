@@ -10,15 +10,11 @@ import com.project_merge.jigu_travel.api.board.entity.Board;
 import com.project_merge.jigu_travel.api.board.repository.BoardJpaRepository;
 import com.project_merge.jigu_travel.api.user.model.User;
 import com.project_merge.jigu_travel.api.user.repository.UserRepository;
-import com.project_merge.jigu_travel.global.common.CommonResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class CommentServiceImpl implements CommentService{
@@ -47,6 +43,7 @@ public class CommentServiceImpl implements CommentService{
                         .build())
                 .collect(Collectors.toList());
     }
+
     // 댓글 작성
     @Override
     public CommentResponseDto addComment(CustomUserDetails userDetails, CommentRequestDto requestDto) {

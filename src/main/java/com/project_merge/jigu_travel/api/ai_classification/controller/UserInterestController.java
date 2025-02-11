@@ -23,11 +23,10 @@ import java.util.UUID;
 public class UserInterestController {
     private final UserInterestService userInterestService;
 
+    // 사용자 관심사 데이터를 받아 저장, 추천 데이터 반환
     @PostMapping("/fetch")
     public ResponseEntity<BaseResponse<RecommendationData>> fetchAndSaveUserInterest(
             @RequestBody RecommendationRequestDto requestDto) {
-
-        System.out.println("[DEBUG] 요청 받은 데이터: " + requestDto);
 
         try {
             RecommendationData response = userInterestService.fetchAndSaveUserInterest(requestDto);
@@ -48,6 +47,7 @@ public class UserInterestController {
     private final UserInterestRepository userInterestRepository;
     private final UserServiceImpl userService; // 현재 로그인한 사용자 정보 가져오기 위한 서비스
 
+    // 현재 로그인한 사용자의 관심사 존재 여부 확인
     @GetMapping("/exists")
     public ResponseEntity<BaseResponse<Boolean>> checkUserInterest(@AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails == null) {
@@ -61,6 +61,7 @@ public class UserInterestController {
         return ResponseEntity.ok(new BaseResponse<>(200, exists ? "관심사가 존재합니다." : "관심사가 없습니다.", exists));
     }
 
+    // 현재 로그인한 사용자의 관심사 정보를 조회
     @GetMapping("/get-user-interest")
     public ResponseEntity<BaseResponse<UserInterest>> getUserInterest(@AuthenticationPrincipal UserDetails userDetails) {
         return Optional.ofNullable(userDetails)

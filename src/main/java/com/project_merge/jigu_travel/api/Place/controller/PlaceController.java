@@ -4,7 +4,6 @@ import com.project_merge.jigu_travel.api.Place.dto.requestDto.PlaceUpdateRequest
 import com.project_merge.jigu_travel.api.Place.service.PlaceService;
 import com.project_merge.jigu_travel.api.websocket.dto.responseDto.PlaceResponseDto;
 import com.project_merge.jigu_travel.global.common.BaseResponse;
-import com.project_merge.jigu_travel.global.common.PlaceType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -12,12 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import com.project_merge.jigu_travel.api.Place.dto.responseDto.CategoryCountDto;
 
 @RequiredArgsConstructor
@@ -50,12 +47,14 @@ public class PlaceController {
         return ResponseEntity.ok(new BaseResponse<>(200, "명소 상세 조회 성공", place));
     }
 
+    // 명소 정보 추가
     @PostMapping("/upload")
     public ResponseEntity<BaseResponse<String>> uploadCsv(@RequestParam("file") MultipartFile file) {
         placeService.uploadPlacesFromCsv(file);
         return ResponseEntity.ok(new BaseResponse<>(200, "CSV 파일이 성공적으로 업로드되었습니다.", null));
     }
 
+    // 전체 명소 조회
     @GetMapping("/all")
     public ResponseEntity<BaseResponse<Map<String, Object>>> getAllPlaces(
             @RequestParam(required = false) Double latitude,
@@ -84,8 +83,7 @@ public class PlaceController {
         return ResponseEntity.ok(new BaseResponse<>(200, "장소 조회 성공", response));
     }
 
-
-
+    // 명소 정보 업데이트(관리자 권한)
     @PatchMapping("/update/{placeId}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<BaseResponse<PlaceResponseDto>> updatePlace(
@@ -96,6 +94,7 @@ public class PlaceController {
         return ResponseEntity.ok(new BaseResponse<>(200, "장소 정보 업데이트 성공", updatedPlace));
     }
 
+    // 명소 삭제, 복구(관리자 권한)
     @DeleteMapping("/delete/{placeId}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<BaseResponse<String>> toggleDeletePlace(@PathVariable Long placeId) {
@@ -113,6 +112,7 @@ public class PlaceController {
         }
     }
 
+    // 명소 완전히 삭제(관리자 권한)
     @DeleteMapping("/permanent-delete/{placeId}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<BaseResponse<String>> permanentlyDeletePlace(@PathVariable Long placeId) {
@@ -126,7 +126,7 @@ public class PlaceController {
         return ResponseEntity.ok(new BaseResponse<>(200, "장소가 완전히 삭제되었습니다.", null));
     }
 
-
+    // 삭제된 명소 조회(관리자 권한)
     @GetMapping("/deleted")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<BaseResponse<Map<String, Object>>> getDeletedPlaces(
@@ -143,6 +143,7 @@ public class PlaceController {
         return ResponseEntity.ok(new BaseResponse<>(200, "삭제된 장소 조회 성공", response));
     }
 
+    // 카테고리별 명소 개수(관리자 권한)
     @GetMapping("/count-by-category")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<BaseResponse<List<CategoryCountDto>>> getPlacesCountByCategory() {

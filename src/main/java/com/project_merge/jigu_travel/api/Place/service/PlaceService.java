@@ -2,7 +2,6 @@ package com.project_merge.jigu_travel.api.Place.service;
 
 import com.project_merge.jigu_travel.api.Place.dto.requestDto.PlaceUpdateRequestDto;
 import com.project_merge.jigu_travel.api.websocket.dto.responseDto.PlaceResponseDto;
-import com.project_merge.jigu_travel.global.common.PlaceType;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 import com.project_merge.jigu_travel.api.Place.dto.responseDto.CategoryCountDto;

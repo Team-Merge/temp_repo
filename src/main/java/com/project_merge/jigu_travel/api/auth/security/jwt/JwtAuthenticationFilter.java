@@ -41,14 +41,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String token = request.getHeader("Authorization");
 
-        System.out.println("JWT 필터 - 요청 URI: " + requestURI);
-        System.out.println("Authorization 헤더 값: " + token);
-
         if (token != null && token.startsWith("Bearer ")) {
             token = token.substring(7);
 
             if (jwtUtil.isTokenExpired(token)) {
-                System.out.println("JWT 만료됨. 401 반환");
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "JWT 만료됨");
                 return; // 필터 체인 중단 (요청을 더 이상 진행하지 않음)
             }
@@ -56,8 +52,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String loginId = jwtUtil.validateToken(token);
 
             if (loginId != null) {
-                System.out.println("드디어 성공: " + loginId);
-
                 // UserService를 사용하여 User 객체를 조회
                 User user = userService.findByLoginId(loginId)
                         .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다: " + loginId));
@@ -71,14 +65,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-                System.out.println("현재 인증 정보: " + SecurityContextHolder.getContext().getAuthentication());
             } else {
-                System.out.println("토큰 검증 실패! 로그인 ID 없음");
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "JWT 검증 실패");
                 return;
             }
         } else {
-            System.out.println("비상! 토큰 없다!! 비상!: " + requestURI);
             SecurityContextHolder.clearContext();
         }
 

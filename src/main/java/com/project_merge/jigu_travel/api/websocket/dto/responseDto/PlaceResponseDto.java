@@ -1,6 +1,5 @@
 package com.project_merge.jigu_travel.api.websocket.dto.responseDto;
 
-import com.project_merge.jigu_travel.global.common.PlaceType;
 import lombok.*;
 
 import java.time.LocalDateTime;

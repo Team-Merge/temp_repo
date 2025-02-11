@@ -15,19 +15,19 @@ public class Attachment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long fileId;
 
-    @ManyToOne(fetch = FetchType.LAZY) // 게시글과 다대일 관계
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id", nullable = false)
     private Board board;
 
     @Column(nullable = false)
-    private String fileName; // 원본 파일명
+    private String fileName;
 
     @Column(nullable = false)
-    private String filePath; // 저장된 파일 경로
+    private String filePath;
 
     @Column(nullable = false)
-    private String fileType; // MIME 타입 (예: image/png, application/pdf)
+    private String fileType;
 
     @Column(nullable = false)
-    private Long fileSize; // 파일 크기 (바이트 단위)
+    private Long fileSize;
 }
