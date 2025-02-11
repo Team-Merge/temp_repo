@@ -38,6 +38,12 @@ public class SecurityConfig {
                         .requestMatchers("/", "/home").permitAll()
                         .requestMatchers("/api/user/check-nickname").permitAll()
                         .requestMatchers("/api/user/check-loginId").permitAll()
+                        .requestMatchers("/api/user/admin/delete/**").hasRole("ADMIN")
+                        .requestMatchers("/api/user/admin/restore/**").hasRole("ADMIN")
+                        .requestMatchers("/api/user/admin/stats/today").hasRole("ADMIN")
+                        .requestMatchers("/api/user/set-admin").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/api/user/delete/**").authenticated()
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers("/auth/login", "/auth/register").permitAll()
                         .requestMatchers("/login", "/register").permitAll()
@@ -65,8 +71,6 @@ public class SecurityConfig {
                         .requestMatchers("/visitor/count").permitAll()
                         .requestMatchers("/api/ai/ai_classification/exists").authenticated()
 
-                        .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers("/api/user/set-admin").hasAuthority("ROLE_ADMIN")
 
                         .anyRequest().authenticated()
                 )
