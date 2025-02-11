@@ -7,7 +7,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -54,7 +53,7 @@ public class SecurityConfig {
                         .requestMatchers("/user-info").permitAll()
                         .requestMatchers("/board/list").permitAll()
                         .requestMatchers("/api/board/**").permitAll()
-                        .requestMatchers("/board/**").authenticated() //
+                        .requestMatchers("/board/**").permitAll() 
                         .requestMatchers("/ws/**", "/stomp-ws/**").permitAll()
                         .requestMatchers("/pub/**", "/sub/**").permitAll()
                         .requestMatchers("/place/delete/**").hasRole("ADMIN")
@@ -72,11 +71,6 @@ public class SecurityConfig {
                         .requestMatchers("/visitor/count").permitAll()
                         .requestMatchers("/api/ai/ai_classification/exists").authenticated()
 
-
-
-//                         .requestMatchers("/admin/**").hasRole("ADMIN")
-
-//                        .requestMatchers("**").permitAll()
 
                         .anyRequest().authenticated()
                 )
