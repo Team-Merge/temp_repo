@@ -2,6 +2,7 @@ package com.project_merge.jigu_travel.api.board.entity;
 
 
 
+import com.project_merge.jigu_travel.api.board.comment.entity.Comment;
 import com.project_merge.jigu_travel.api.user.model.User;
 import com.project_merge.jigu_travel.global.entity.BaseEntity;
 import jakarta.persistence.*;
@@ -9,7 +10,6 @@ import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Entity
 @AllArgsConstructor
@@ -43,4 +43,7 @@ public class Board extends BaseEntity {
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Attachment> attachments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
 }
