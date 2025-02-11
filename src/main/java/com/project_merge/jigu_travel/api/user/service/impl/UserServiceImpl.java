@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    // UUID 반환 함수! 이예!
+    // UUID 반환 함수
     public UUID getCurrentUserUUID() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated()) {

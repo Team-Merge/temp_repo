@@ -1,15 +1,12 @@
 package com.project_merge.jigu_travel.api.Place.repository;
 
-import com.project_merge.jigu_travel.api.Place.dto.responseDto.CategoryCountDto;
 import com.project_merge.jigu_travel.api.Place.entity.Place;
-import com.project_merge.jigu_travel.global.common.PlaceType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 import java.util.Optional;

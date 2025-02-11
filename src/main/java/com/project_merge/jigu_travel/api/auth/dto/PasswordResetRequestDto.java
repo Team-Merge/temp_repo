@@ -9,5 +9,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class PasswordResetRequestDto {
 
-    private String email; // 사용자의 이메일
+    private String email;
 }

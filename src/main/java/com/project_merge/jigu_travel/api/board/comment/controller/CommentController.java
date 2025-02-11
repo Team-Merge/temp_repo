@@ -5,10 +5,7 @@ import com.project_merge.jigu_travel.api.board.comment.dto.CommentRequestDto;
 import com.project_merge.jigu_travel.api.board.comment.dto.CommentResponseDto;
 import com.project_merge.jigu_travel.api.board.comment.dto.CommentUpdateRequestDto;
 import com.project_merge.jigu_travel.api.board.comment.service.CommentService;
-import com.project_merge.jigu_travel.api.board.comment.service.CommentServiceImpl;
-import com.project_merge.jigu_travel.api.board.dto.requestDto.BoardUpdateResponseDto;
 import com.project_merge.jigu_travel.global.common.BaseResponse;
-import com.project_merge.jigu_travel.global.common.CommonResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,8 +38,6 @@ public class CommentController {
     public ResponseEntity<BaseResponse<CommentResponseDto>> postComment(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestBody CommentRequestDto requestDto) {
-
-//        return ResponseEntity.ok(commentService.createComment(request.getArticleId(), request.getBody()));
 
         if (userDetails == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
