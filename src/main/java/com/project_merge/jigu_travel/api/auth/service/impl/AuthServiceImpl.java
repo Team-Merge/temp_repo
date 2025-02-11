@@ -20,7 +20,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.Date;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
@@ -80,7 +79,7 @@ public class AuthServiceImpl implements AuthService {
                 .birthDate(request.getBirthDate())
                 .location(locationValue)
                 .role(Role.ROLE_USER)
-                .email(request.getEmail())  // 이메일 저장
+                .email(request.getEmail())
                 .build();
 
         userRepository.save(user);
@@ -95,15 +94,11 @@ public class AuthServiceImpl implements AuthService {
             throw new CustomException(ErrorCode.INVALID_TOKEN);
         }
 
-        System.out.println("로그아웃 요청한 사용자 ID: " + loginId);
-
         User user = userRepository.findByLoginIdAndDeletedFalse(loginId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         Auth auth = authRepository.findByAccessToken(token)
                 .orElseThrow(() -> new CustomException(ErrorCode.INVALID_TOKEN));
-
-        System.out.println("로그아웃 완료 - 사용자: " + user.getLoginId());
 
         // 사용자와 관련된 토큰 삭제 (DB에서 삭제)
         authRepository.invalidateAccessToken(token);
@@ -112,8 +107,6 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public String refreshAccessToken(String refreshToken) {
-        System.out.println("Refresh Token을 사용하여 Access Token 갱신 시도");
-
         if (jwtUtil.isTokenExpired(refreshToken)) {
             throw new CustomException(ErrorCode.INVALID_TOKEN);
         }
@@ -132,8 +125,6 @@ public class AuthServiceImpl implements AuthService {
         auth.setAccessToken(newAccessToken);
         auth.setUpdatedAt(now);
         authRepository.save(auth);
-
-        System.out.println("새로운 Access Token 발급 완료 및 저장: " + newAccessToken);
 
         return newAccessToken;
     }

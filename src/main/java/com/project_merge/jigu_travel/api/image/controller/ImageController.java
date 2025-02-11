@@ -24,7 +24,6 @@ public class ImageController {
      */
     @PostMapping("/image_search")
     public ResponseEntity<ImageResponseDto> uploadImage(@RequestParam("file") MultipartFile file) {
-        System.out.println("파일이름"+file.getOriginalFilename());
         logger.info("Received image for search: {}", file.getOriginalFilename());
         ImageResponseDto response = fastImageService.processImageSearch(file);
         return ResponseEntity.ok(response);

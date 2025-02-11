@@ -75,7 +75,6 @@ public class UserInterestService {
             }
         }
 
-        System.out.println("FastAPI 응답 (DTO): " + responseDto);
         return responseDto.getData(); // 중첩된 `data`만 반환
     }
 }

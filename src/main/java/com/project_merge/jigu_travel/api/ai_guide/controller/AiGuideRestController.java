@@ -25,11 +25,7 @@ public class AiGuideRestController {
     // 음성 녹음 파일 처리
     @PostMapping("/upload-audio")
     public AudioResponse uploadAudio(@RequestParam("audio") MultipartFile audioFile, HttpSession session) {
-        if (audioFile.isEmpty()) {
-            System.out.println("파일 비어있음");
-        }
 
-        System.out.println("audio_file name: " + audioFile.getOriginalFilename());
         // 여기서 실제 파일 처리 로직 추가
 
         return aiGuideService.handleAudioAndQuestion(audioFile,session);
@@ -50,7 +46,6 @@ public class AiGuideRestController {
     // 대화 기록 처리
     @GetMapping("/get-chat-history")
     public List<ConversationHistory> getChatHistory(@RequestParam int offset, @RequestParam int limit) {
-        System.out.println("컨트롤러 확인");
         return aiGuideService.handleChatHistory(offset,limit);
     }
 }

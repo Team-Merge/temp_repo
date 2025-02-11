@@ -2,8 +2,6 @@ package com.project_merge.jigu_travel.api.board.controller;
 
 import com.project_merge.jigu_travel.api.auth.model.CustomUserDetails;
 import com.project_merge.jigu_travel.api.board.dto.reponseDto.BoardResponseDto;
-import com.project_merge.jigu_travel.api.board.dto.reponseDto.BoardUpdateRequestDto;
-import com.project_merge.jigu_travel.api.board.dto.requestDto.BoardPostsRequestDto;
 import com.project_merge.jigu_travel.api.board.dto.requestDto.BoardUpdateResponseDto;
 import com.project_merge.jigu_travel.api.board.entity.Attachment;
 import com.project_merge.jigu_travel.api.board.repository.AttachmentJpaRepository;
@@ -25,8 +23,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -45,12 +41,10 @@ public class BoardController {
 
     private final AttachmentJpaRepository attachmentJpaRepository;
 
-    @Value("${file.upload-dir}") // application.properties 에 설정된 파일 저장 경로
+    @Value("${file.upload-dir}")
     private String uploadDir;
 
-    /**
-     * 📌 게시글 목록 조회 (인증 없이 접근 가능)
-     */
+    // 게시글 목록 조회
     @GetMapping("/list")
     @ResponseBody
     public ResponseEntity<BaseResponse<Map<String, Object>>> getAllBoard(
@@ -58,16 +52,15 @@ public class BoardController {
             @RequestParam(defaultValue = "10") int size) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println("[DEBUG] SecurityContext Authentication: " + authentication);
 
         Page<BoardResponseDto> boardPage = boardServiceImpl.getBoardList(page, size);
 
         Map<String, Object> response = new HashMap<>();
-        response.put("currentPage", boardPage.getNumber());   // 현재 페이지
-        response.put("totalPages", boardPage.getTotalPages()); // 전체 페이지 수
-        response.put("totalItems", boardPage.getTotalElements()); // 전체 게시글 수
-        response.put("size", boardPage.getSize()); // 페이지 크기
-        response.put("posts", boardPage.getContent()); // 현재 페이지의 게시글 데이터
+        response.put("currentPage", boardPage.getNumber());
+        response.put("totalPages", boardPage.getTotalPages());
+        response.put("totalItems", boardPage.getTotalElements());
+        response.put("size", boardPage.getSize());
+        response.put("posts", boardPage.getContent());
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(BaseResponse.<Map<String, Object>>builder()
@@ -76,13 +69,11 @@ public class BoardController {
                         .build());
     }
 
-    /**
-     * 📌 게시글 작성 (로그인 필요, + 파일 업로드)
-     */
+    // 게시글 작성
     @PostMapping(value = "/posts", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @ResponseBody
     public ResponseEntity<BaseResponse<CommonResponseDto>> addBoard(
-            @AuthenticationPrincipal CustomUserDetails userDetails, // ✅ SecurityContext에서 사용자 정보 가져오기
+            @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestParam("title") String title,
             @RequestParam("content") String content,
             @RequestParam("inquiryType") String inquiryType,
@@ -104,9 +95,7 @@ public class BoardController {
                 .build());
     }
 
-    /**
-     * 📌 게시글 수정 (로그인 필요)
-     */
+    // 게시글 수정
     @PatchMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseBody
     public ResponseEntity<BaseResponse<BoardUpdateResponseDto>> updateBoard(
@@ -135,13 +124,11 @@ public class BoardController {
                         .build());
     }
 
-    /**
-     * 📌 게시글 삭제 (로그인 필요)
-     */
+    // 게시글 삭제
     @DeleteMapping("/deletion")
     @ResponseBody
     public ResponseEntity<BaseResponse<CommonResponseDto>> deleteBoard(
-            @AuthenticationPrincipal CustomUserDetails userDetails, // ✅ SecurityContext에서 사용자 정보 가져오기
+            @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestParam Long boardId) {
 
         if (userDetails == null) {
@@ -161,9 +148,7 @@ public class BoardController {
                         .build());
     }
 
-    /**
-     * 📌 게시글 상세 조회 (인증 없이 접근 가능)
-     */
+    // 게시글 상세 조회
     @GetMapping("/detail/{boardId}")
     @ResponseBody
     public ResponseEntity<BaseResponse<BoardResponseDto>> getBoardDetail(@PathVariable Long boardId) {
@@ -185,6 +170,7 @@ public class BoardController {
                         .build());
     }
 
+    // 첨부파일 다운로드
     @GetMapping("/download")
     public ResponseEntity<Resource> downloadFile(@RequestParam String fileName) {
         try {
@@ -212,9 +198,6 @@ public class BoardController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-//        return boardServiceImpl.downloadFile(fileName);
     }
-
-
 
 }

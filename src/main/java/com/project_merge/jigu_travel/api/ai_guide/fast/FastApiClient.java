@@ -3,7 +3,6 @@ package com.project_merge.jigu_travel.api.ai_guide.fast;
 import com.project_merge.jigu_travel.api.ai_guide.dto.AudioResponse;
 import com.project_merge.jigu_travel.api.ai_guide.dto.TextResponse;
 import com.project_merge.jigu_travel.api.ai_guide.dto.UserInputRequest;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;

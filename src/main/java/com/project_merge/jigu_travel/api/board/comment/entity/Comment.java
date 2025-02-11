@@ -6,8 +6,6 @@ import com.project_merge.jigu_travel.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
-
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -31,8 +29,5 @@ public class Comment  extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id", nullable = false)
     private Board board;
-
-//    private LocalDateTime createdAt;
-
 
 }

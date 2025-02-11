@@ -4,30 +4,23 @@ import com.project_merge.jigu_travel.api.Place.dto.requestDto.PlaceUpdateRequest
 import com.project_merge.jigu_travel.api.Place.entity.Place;
 import com.project_merge.jigu_travel.api.Place.repository.PlaceRepository;
 import com.project_merge.jigu_travel.api.websocket.dto.responseDto.PlaceResponseDto;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import com.project_merge.jigu_travel.global.common.PlaceType;
 
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 import com.opencsv.CSVReader;
-import com.opencsv.exceptions.CsvException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.stereotype.Service;
-import lombok.RequiredArgsConstructor;
 import java.util.List;
-import java.util.stream.Collectors;
 import com.project_merge.jigu_travel.api.Place.dto.responseDto.CategoryCountDto;
 
 @Service
@@ -105,11 +98,9 @@ public class PlaceServiceImpl implements PlaceService {
                     Place existingPlace = existingPlaceOpt.get();
                     updateExistingPlace(existingPlace, newPlace);
                     placeRepository.save(existingPlace);
-                    System.out.println("기존 장소 업데이트됨: " + existingPlace.getName());
                 } else {
                     // 기존 데이터가 없으면 새로운 장소 추가
                     placeRepository.save(newPlace);
-                    System.out.println("신규 장소 추가됨: " + newPlace.getName());
                 }
             }
         } catch (Exception e) {
@@ -123,26 +114,20 @@ public class PlaceServiceImpl implements PlaceService {
         existingPlace.setTel(newPlace.getTel());
         existingPlace.setLatitude(newPlace.getLatitude());
         existingPlace.setLongitude(newPlace.getLongitude());
-//        existingPlace.setUpdatedAt(LocalDateTime.now()); // 수정 시간 업데이트
     }
 
 
     private Place mapToPlace(String[] data) {
-        System.out.println("CSV 데이터: " + Arrays.toString(data));
-
         // CSV의 `type` 컬럼을 `List<String>`으로 변환
         List<String> placeTypes = Arrays.stream(data[5].split(","))
                 .map(String::trim)
                 .toList();
-
-        System.out.println("변환된 PlaceType: " + placeTypes);
 
         // Place 객체 생성 시 List<String> 사용
         Place place = new Place(placeTypes, data[0], data[1],
                 Double.parseDouble(data[3]),
                 Double.parseDouble(data[4]), data[2]);
 
-        System.out.println("저장될 Place 객체: " + place);
         return place;
     }
 
@@ -202,8 +187,6 @@ public class PlaceServiceImpl implements PlaceService {
         if (updateDto.getTel() != null) place.setTel(updateDto.getTel());
         if (updateDto.getLatitude() != null) place.setLatitude(updateDto.getLatitude());
         if (updateDto.getLongitude() != null) place.setLongitude(updateDto.getLongitude());
-
-//        place.setUpdatedAt(LocalDateTime.now()); // 수정 시간 업데이트
 
         placeRepository.save(place);
 

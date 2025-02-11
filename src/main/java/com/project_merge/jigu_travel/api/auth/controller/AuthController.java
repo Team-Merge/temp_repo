@@ -21,7 +21,6 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import java.util.Date;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -52,8 +51,6 @@ public class AuthController {
 
             response.addCookie(refreshTokenCookie);
 
-            System.out.println(" 로그인 성공, 새 Access Token: " + loginResponse.getAccessToken());
-
             return ResponseEntity.ok(new BaseResponse<>(200, "로그인 성공", loginResponse));
         } catch (CustomException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -78,8 +75,6 @@ public class AuthController {
     public ResponseEntity<BaseResponse<Void>> logout(
             HttpServletRequest request,
             HttpServletResponse response) {
-
-        System.out.println("로그아웃 요청 수신");
 
         try {
             String accessToken = request.getHeader("Authorization");
@@ -106,8 +101,6 @@ public class AuthController {
     /** Refresh Token을 사용하여 Access Token 갱신 */
     @PostMapping("/refresh")
     public ResponseEntity<BaseResponse<RefreshTokenResponseDto>> refreshAccessToken(HttpServletRequest request) {
-        System.out.println("Refresh Token 요청 수신");
-
         try {
             // 1. 쿠키에서 Refresh Token 가져오기
             Cookie[] cookies = request.getCookies();
@@ -144,8 +137,6 @@ public class AuthController {
 
             RefreshTokenResponseDto responseDto = new RefreshTokenResponseDto(newAccessToken);
 
-            System.out.println("새로운 Access Token 발급 및 DB 저장 완료: " + newAccessToken);
-
             return ResponseEntity.ok(new BaseResponse<>(200, "새로운 Access Token 발급 성공", responseDto));
         } catch (CustomException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -156,11 +147,8 @@ public class AuthController {
     /**아이디 존재 여부 확인 : 있으면 이메일 반환**/
     @GetMapping("/check-user")
     public ResponseEntity<?> checkUserExists(@RequestParam String loginId) {
-        System.out.println("❗️아이디 여부 확인 : "+loginId);
         User user = userRepository.findByLoginIdAndDeletedFalse(loginId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-
-        System.out.println("❗️아이디 여부 확인 : "+loginId+ " / email : "+user.getEmail());
 
         return ResponseEntity.ok().body(Map.of("email", user.getEmail()));
     }
@@ -168,7 +156,6 @@ public class AuthController {
     /** 비밀번호 재설정 요청 **/
     @PostMapping("/password-reset-request")
     public ResponseEntity<String> requestPasswordReset(@RequestBody PasswordResetRequestDto requestDto) {
-        System.out.println("📌전송 이메일 주소 : "+requestDto.getEmail());
         authService.requestPasswordResetByEmail(requestDto.getEmail());
         return ResponseEntity.ok("비밀번호 재설정 이메일이 발송되었습니다.");
     }

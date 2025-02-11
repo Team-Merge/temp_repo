@@ -6,11 +6,9 @@ import java.util.List;
 
 @Data
 public class TextResponse {
-//    private String answer;  // Answer 필드 (String 타입)
     private ConversationHistory conversation_history;  // ConversationHistory 객체
 
     public TextResponse(String message, Object o) { //요청실패시
-//        this.answer = message;
         this.conversation_history = new ConversationHistory();
     }
 

@@ -37,9 +37,7 @@ public class EmailService {
             helper.setText(message, true); // HTML 형식 사용
 
             mailSender.send(mimeMessage);
-            System.out.println("이메일 전송 성공: " + toEmail);
         } catch (MessagingException e) {
-            System.err.println("이메일 전송 실패: " + e.getMessage());
             throw new RuntimeException("이메일 전송 중 오류 발생");
         }
     }

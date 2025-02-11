@@ -30,6 +30,7 @@ public class UserLocation {
     private LocalDateTime timestamp = LocalDateTime.now(); // 여행 종료 시간
 
     public void setLocations(List<UserLocationRequestDto> locationList) {
+
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             this.locations = objectMapper.writeValueAsString(locationList);
