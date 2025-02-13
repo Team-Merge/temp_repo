@@ -64,6 +64,7 @@ public class SecurityConfig {
                         .requestMatchers("/visitor/records").permitAll()
                         .requestMatchers("/visitor/count").permitAll()
                         .requestMatchers("/api/ai/ai_classification/exists").authenticated()
+                        .requestMatchers("/api/comments/**").permitAll()
 
                         .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
                         .requestMatchers("/api/user/set-admin").hasAuthority("ROLE_ADMIN")
