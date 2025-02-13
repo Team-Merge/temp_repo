@@ -70,6 +70,7 @@ public class SecurityConfig {
                         .requestMatchers("/visitor/records").permitAll()
                         .requestMatchers("/visitor/count").permitAll()
                         .requestMatchers("/api/ai/ai_classification/exists").authenticated()
+                        .requestMatchers("/api/comments/**").permitAll()
 
 
                         .anyRequest().authenticated()
