@@ -9,8 +9,11 @@
 <br>
 
 ## Demo video
+<img src="https://github.com/user-attachments/assets/f9ca392f-6118-4c85-a380-a4341a13e7b4">
 
-https://github.com/user-attachments/assets/146d9280-a3a4-4027-9b12-60deaf5e455f
+
+
+
 
 
 
