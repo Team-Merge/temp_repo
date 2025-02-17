@@ -109,14 +109,13 @@
 [FastApI](https://github.com/Team-Merge/fastapi_deploy) + [FastApI(model)](https://drive.google.com/file/d/1MK9vmjsV11qPoimpKyySVKEu7RjJdtUi/view?usp=drive_link)
 <br>
 
-1. frontend 사용 방법
+**1. frontend 사용 방법**
    1.  dev로 구동
    ```
    npm run dev
    ```
 
-
-2. fastapi 사용 방법
+**2. fastapi 사용 방법**
    1. 가상 환경 생성
    ```
    conda create -y -n [원하는 환경 이름] python=3.12.5
@@ -146,7 +145,7 @@
    ```
     
 
-4. backend 사용 방법
+**4. backend 사용 방법**
 
 
 <br>
