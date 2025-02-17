@@ -103,8 +103,11 @@
 
 ## 코드 사용 방법
 아래 두 코드를 다운로드
+<br>
 [1. FrontEnd](https://github.com/Team-Merge/jigu_travel_fe)
+<br>
 [2. FastApI](https://github.com/Team-Merge/fastapi_deploy) + [2. FastApI(model)](https://drive.google.com/file/d/1MK9vmjsV11qPoimpKyySVKEu7RjJdtUi/view?usp=drive_link)
+<br>
 
 1. frontend 사용 방법
 
