@@ -9,12 +9,7 @@
 <br>
 
 ## Demo video
-https://github.com/user-attachments/assets/f9ca392f-6118-4c85-a380-a4341a13e7b4
-
-
-
-
-
+![Debo_video_resize](https://github.com/user-attachments/assets/ff9c3792-7c9b-4257-b2e9-107d7fd6765a)
 
 
 <br>
