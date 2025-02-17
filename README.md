@@ -20,7 +20,15 @@
 |:----------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------:|:---------------------------------------------------------------------:|:-------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------:|
 | **서영현** <br/> *(팀장, Full-Stack)* | **강민구** <br/> *(부팀장, BE/Infra)* | **남다윤** <br/> *(Full-Stack)* | **소혜원** <br/> *(Full-Stack)* | **안다희** <br/> *(Full-Stack)* | **양준형** <br/> *(Full-Stack)* |
 | **보안, 회원 및 관리자 기능, 여행추천 AI** | **웹소켓 서버, Infra, 객체탐지 AI 전처리**&nbsp;&nbsp;&nbsp;&nbsp; | **AI 음성 가이드 챗봇** &nbsp;&nbsp;&nbsp;&nbsp;| **게시판, AI 음성 가이드 챗봇**&nbsp;&nbsp;&nbsp;&nbsp; | **웹소켓, 여행 추천 AI, 위치기반 추천 시스템**&nbsp;&nbsp;&nbsp;&nbsp; | **Yolo, 객체 탐지** &nbsp;&nbsp;&nbsp;&nbsp;|
-<table style="width:100%; text-align:center; table-layout: fixed;">
+<table style="width:100%; text-align:center;">
+    <colgroup>
+        <col style="width:16%;">
+        <col style="width:16%;">
+        <col style="width:16%;">
+        <col style="width:16%;">
+        <col style="width:16%;">
+        <col style="width:16%;">
+    </colgroup>
     <tr>
         <td><a href="https://github.com/Lucky-SeoYounghyun"><img src="https://github.com/Lucky-SeoYounghyun.png?size=120" width="120"/></a></td>
         <td><a href="https://github.com/rkdalsrn555"><img src="https://github.com/rkdalsrn555.png?size=120" width="120"/></a></td>
@@ -38,14 +46,15 @@
         <td>양준형</td>
     </tr>
     <tr>
-        <td>보안, 회원 및 관리자 기능,<br/> 여행추천 AI</td>
-        <td>부팀장, 웹소켓 서버,<br/> Infra, 객체탐지 AI 전처리</td>
+        <td>보안, 회원 및 관리자 기능, 여행추천 AI</td>
+        <td>부팀장, 웹소켓 서버, Infra, 객체탐지 AI 전처리</td>
         <td>AI 음성 가이드 챗봇</td>
         <td>게시판, AI 음성 가이드 챗봇</td>
-        <td>웹소캣, 여행 추천 AI,<br/> 위치기반 추천 시스템</td>
+        <td>웹소캣, 여행 추천 AI, 위치기반 추천 시스템</td>
         <td>Yolo, 객체 탐지</td>
     </tr>
 </table>
+
 
 
 <br>
