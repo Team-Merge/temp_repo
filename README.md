@@ -72,7 +72,7 @@
 |:-----------:|:-----------------:|:------------------|
 |     챗봇     |               |               |
 |     챗봇     |               |               |
-| 카테고리 분류 |    SCV 모델    | - 사용자가 속할 가능성이 높은 여행 카테고리 예측 <br/> - randomforest대비 50% 이상 향상된 정확도 <br/> - 관련 논문          |
+| 카테고리 분류 |    SCV 모델    | - 사용자가 속할 가능성이 높은 여행 카테고리 예측 <br/> - randomforest대비 50% 이상 향상된 정확도 <br/> - 관련 논문: <br/> [1. SVM Dual Formulation](https://medium.com/@sathvikchiramana/svm-dual-formulation-7535caa84f17) <br/> [2. SVM 개념 설명](https://yngie-c.github.io/machine%20learning/2021/03/07/svm/) <br/> [3. 서포트 벡터 머신 - 위키피디아](https://ko.wikipedia.org/wiki/%EC%84%9C%ED%8F%AC%ED%8A%B8_%EB%B2%A1%ED%84%B0_%EB%A8%B8%EC%8B%A0) <br/> [4. DBpia 논문](https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE07015303) |
 | 카테고리 분류 |   COS 유사도   |               |
 | 카테고리 분류 |     최빈값     |               |
 |   객체탐지   |               |               |
