@@ -117,6 +117,30 @@
      ```
      conda create -y -n [원하는 환경 이름] python=3.12.5
      ```
+     
+     2. 가상 환경 활성화
+     ```
+     conda activate [환경 이름]
+     ```
+     
+     3. 라이브러리 설치
+     ```
+     pip install -r requirements.txt
+     ```
+
+     4. api_key.txt 파일을 만든 후 gpt key를 넣어줍니다
+  
+     5. google_places_api_key.txt 파일을 만든 후 google places api키를 넣어줍니다.
+
+     6. service_account_key.json에 Google Cloud 서비스 계정 키를 설정해줍니다.
+  
+     7. 다운로드한 model을 해당 경로에 넣어줍니다.
+  
+     8. FastAPI 실행
+     ```
+     uvicorn app.main:app
+     ```
+    
 
 4. backend 사용 방법
 
@@ -125,6 +149,13 @@
 
 ## 서비스 사용 방법
 
+<br>
+
+## 앞으로 발전 방향
+
+<br>
+
+## 프로젝트를 진행하며 느낀점
 
 <br>
 
