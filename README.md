@@ -13,7 +13,7 @@
 <br>
 
 ## 팀 멤버
-| <a href="https://github.com/Lucky-SeoYounghyun"><img src="https://github.com/Lucky-SeoYounghyun.png?size=120" width="120"/></a> | <a href="https://github.com/rkdalsrn555"><img src="https://github.com/rkdalsrn555.png?size=120" width="120"/></a> | <a href="https://github.com/dayoonn"><img src="https://github.com/dayoonn.png?size=120" width="120"/></a> | <a href="https://github.com/ekdha235"><img src="https://github.com/ekdha235.png?size=120" width="120"/></a> | <a href="https://github.com/Dah222"><img src="https://github.com/Dah222.png?size=120" width="120"/></a> | <a href="link"><img src="link.png?size=120" width="120"/></a> |
+| <a href="https://github.com/Lucky-SeoYounghyun"><img src="https://github.com/Lucky-SeoYounghyun.png?size=120" width="120"/></a> | <a href="https://github.com/rkdalsrn555"><img src="https://github.com/rkdalsrn555.png?size=120" width="120"/></a> | <a href="https://github.com/dayoonn"><img src="https://github.com/dayoonn.png?size=120" width="120"/></a> | <a href="https://github.com/ekdha235"><img src="https://github.com/ekdha235.png?size=120" width="120"/></a> | <a href="https://github.com/Dah222"><img src="https://github.com/Dah222.png?size=120" width="120"/></a> | <a href="https://github.com/YJH0501"><img src="https://github.com/YJH0501.png?size=120" width="120"/></a> |
 |:----------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------:|:---------------------------------------------------------------------:|:-------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------:|
 |                                            서영현                                                     |                                     강민구                                      |                                       남다윤                                       |                               소혜원                                  |                                        안다희                                          |                                        양준형                                          |
 
@@ -31,6 +31,34 @@
 |     문서화      |         O         |          O         |          O         |          O         |          O         |          O         |          O         |
 
 <br>
+
+## 개발 선정 과정
+
+
+<br>
+
+## 주요 서비스 내용
+
+
+<br>
+
+## 적용 기술
+
+
+<br>
+
+## 기대 효과
+
+
+<br>
+
+## 코드 사용 방법
+
+
+<br>
+
+## 서비스 사용 방법
+
 
 <br>
 
