@@ -11,7 +11,7 @@
 ## Demo video
 ![Debo_video_resize](https://github.com/user-attachments/assets/ff9c3792-7c9b-4257-b2e9-107d7fd6765a)
 <br>
-고화질 영상은 다운로드후 시청 가능합니다.
+고화질 영상은 다운로드후 시청 가능합니다. [다운로드 demo_video](https://github.com/Team-Merge/jigu_travel/raw/develop/demo_video.mp4)
 
 <br>
 
