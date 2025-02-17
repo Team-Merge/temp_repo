@@ -85,11 +85,37 @@
 <br>
 
 ## 기대 효과
+**사용자 중심의 맞춤형 여행 제공**
+- 사용자 선호도와 여행 목적을 학습하여 최적화된 관광경험을 제공
+- 해당 여행지에서의 만족감 상승
 
+**AI 음성 가이드로 몰입감 있는 여행**
+- 단순히 명소를 소개하는것을 넘어, 사용자 관심사에 맞춘 상세한 역사, 문화적 배경 등 맞춤형 설명 제공
 
+**지역 관광 활성화 및 균형 발전**
+- 잘 알려지지 않은 지역 명소를 데이터 기반 추천
+- 관광 패턴의 지역적 분산 촉진
+
+**자자체 및 관광 업체 활성화**
+- 사용자의 여행 패턴과 선호 데이터를 분석하여 지역 관광 정책 및 전략 수립에 활용
+  
 <br>
 
 ## 코드 사용 방법
+아래 두 코드를 다운로드
+[1. FrontEnd](https://github.com/Team-Merge/jigu_travel_fe)
+[2. FastApI](https://github.com/Team-Merge/fastapi_deploy) + [2. FastApI(model)](https://drive.google.com/file/d/1MK9vmjsV11qPoimpKyySVKEu7RjJdtUi/view?usp=drive_link)
+
+1. frontend 사용 방법
+
+
+2. fastapi 사용 방법
+  1. 가상 환경 생성
+     ```
+     conda create -y -n [원하는 환경 이름] python=3.12.5
+     ```
+
+3. backend 사용 방법
 
 
 <br>
