@@ -70,8 +70,10 @@
 ### - AI 기술
 |      \      |        기술       |      세부 내용     |
 |:-----------:|:-----------------:|:------------------|
-|     챗봇     |               |               |
-|     챗봇     |               |               |
+|     챗봇     |      GPT-4o-mini Fine-tuning         |    - OpenAI GPT-4o-mini 모델을 여행 가이드용으로 파인튜닝하여 자연스러운 질의응답 구현 <br/> - 여행 맥락을 이해하는 문맥 기반 답변 가능 (이전 대화 내용 반영) <br/> - 추측 금지, 데이터 기반 응답 원칙 적용           |
+|     챗봇     |       RAG (Retrieval-Augmented Generation)        |   - **외부 데이터(RAG)**를 활용하여 GPT가 최신 정보를 제공하도록 보강 <br/> - GPT 모델이 학습하지 않은 새로운 장소, 리뷰 정보를 검색하여 반영            |
+|     챗봇     |       Google Places API,네이버 크롤링        |   - 구글 지도 기반으로 실시간 장소 정보 제공 (주소, 영업 시간, 평점 등) <br/> - 추천 장소의 리뷰 분석을 통해 신뢰도 높은 정보 제공 <br/> - 네이버 지도 데이터를 크롤링하여 국내 장소에 대한 최신 정보 확보 <br/> - 예: 맛집, 카페 메뉴 정보 자동 수집 |
+|     챗봇     |      OpenAI Whisper, Google Cloud Text-to-Speech       |   - OpenAI Whisper 기반 음성 인식(STT) 기능 적용 <br/> - 사용자의 음성 명령을 정확한 텍스트로 변환하여 챗봇과 연동 <br/> - Google Cloud TTS 활용하여 자연스러운 음성 변환(TTS) 기능 지원 |
 | 카테고리 분류 |    SCV 모델    | - 사용자가 속할 가능성이 높은 여행 카테고리 예측 <br/> - randomforest대비 50% 이상 향상된 정확도 <br/> - 관련 자료: <br/> &nbsp;&nbsp;&nbsp;&nbsp;[1. SVM Dual Formulation](https://medium.com/@sathvikchiramana/svm-dual-formulation-7535caa84f17) <br/> &nbsp;&nbsp;&nbsp;&nbsp;[2. SVM 개념 설명](https://yngie-c.github.io/machine%20learning/2021/03/07/svm/) <br/> &nbsp;&nbsp;&nbsp;&nbsp;[3. 서포트 벡터 머신 - 위키피디아](https://ko.wikipedia.org/wiki/%EC%84%9C%ED%8F%AC%ED%8A%B8_%EB%B2%A1%ED%84%B0_%EB%A8%B8%EC%8B%A0) <br/> &nbsp;&nbsp;&nbsp;&nbsp;[4. SVM을 이용한 디렉토리 기반 기술정보 문서 자동 분류시스템 설계](https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE07015303) |
 | 카테고리 분류 |   COS 유사도   | - 두 벡터의 크기가 아닌 방향에 집중하여 정규화된 데이터에 적합 <br/> - 사용자의 입력 특징을 기존 데이터와 비교하여 가장 유사한 사용자 서치 <br/> - 유사도가 높은 3명에대해 카테고리별로 추천 <br/> - 개인화된 추천을 유사도 기반으로 제공 <br/> - 관련 자료: <br/> &nbsp;&nbsp;&nbsp;&nbsp;[1. 코사인 유사도 기법을 이용한 뉴스 추천 시스템](https://scienceon.kisti.re.kr/srch/selectPORSrchArticle.do?cn=NPAP12013299&utm_source=chatgpt.com) <br/> &nbsp;&nbsp;&nbsp;&nbsp;[2. 코사인 유사도 측정을 통한 행위 기반 인증](https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART002619181&utm_source=chatgpt.com)  |
 |   객체탐지   |    YOLO11x    | - 실시간 객체 탐지 기술의 대표적인 기술<br/> - DDP, 가락몰, 코엑스, 롯데타워몰을 인식하는 모델을 제작함<br/> - 추후 더 많은 건물/명소를 인식할 수 있게 모델 제작이 가능 <br/> - 관련 자료 : https://docs.ultralytics.com/ko/models/yolo11/#usage-examples              |
