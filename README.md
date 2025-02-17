@@ -9,7 +9,7 @@
 <br>
 
 ## Demo video
-<img src="https://github.com/user-attachments/assets/f9ca392f-6118-4c85-a380-a4341a13e7b4">
+https://github.com/user-attachments/assets/f9ca392f-6118-4c85-a380-a4341a13e7b4
 
 
 
