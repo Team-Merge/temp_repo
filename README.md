@@ -74,7 +74,7 @@
 |     챗봇     |               |               |
 | 카테고리 분류 |    SCV 모델    | - 사용자가 속할 가능성이 높은 여행 카테고리 예측 <br/> - randomforest대비 50% 이상 향상된 정확도 <br/> - 관련 자료: <br/> &nbsp;&nbsp;&nbsp;&nbsp;[1. SVM Dual Formulation](https://medium.com/@sathvikchiramana/svm-dual-formulation-7535caa84f17) <br/> &nbsp;&nbsp;&nbsp;&nbsp;[2. SVM 개념 설명](https://yngie-c.github.io/machine%20learning/2021/03/07/svm/) <br/> &nbsp;&nbsp;&nbsp;&nbsp;[3. 서포트 벡터 머신 - 위키피디아](https://ko.wikipedia.org/wiki/%EC%84%9C%ED%8F%AC%ED%8A%B8_%EB%B2%A1%ED%84%B0_%EB%A8%B8%EC%8B%A0) <br/> &nbsp;&nbsp;&nbsp;&nbsp;[4. SVM을 이용한 디렉토리 기반 기술정보 문서 자동 분류시스템 설계](https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE07015303) |
 | 카테고리 분류 |   COS 유사도   | - 두 벡터의 크기가 아닌 방향에 집중하여 정규화된 데이터에 적합 <br/> - 사용자의 입력 특징을 기존 데이터와 비교하여 가장 유사한 사용자 서치 <br/> - 유사도가 높은 3명에대해 카테고리별로 추천 <br/> - 개인화된 추천을 유사도 기반으로 제공 <br/> - 관련 자료: <br/> &nbsp;&nbsp;&nbsp;&nbsp;[1. 코사인 유사도 기법을 이용한 뉴스 추천 시스템](https://scienceon.kisti.re.kr/srch/selectPORSrchArticle.do?cn=NPAP12013299&utm_source=chatgpt.com) <br/> &nbsp;&nbsp;&nbsp;&nbsp;[2. 코사인 유사도 측정을 통한 행위 기반 인증](https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART002619181&utm_source=chatgpt.com)  |
-|   객체탐지   |               |               |
+|   객체탐지   |    YOLO11x    | - 실시간 객체 탐지 기술의 대표적인 기술<br/> - DDP, 가락몰, 코엑스, 롯데타워몰을 인식하는 모델을 제작함<br/> - 추후 더 많은 건물/명소를 인식할 수 있게 모델 제작이 가능 <br/> - 관련 자료 : https://docs.ultralytics.com/ko/models/yolo11/#usage-examples              |
 |   객체탐지   |               |               |
 
 ### - 일반 기술
