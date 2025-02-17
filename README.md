@@ -10,6 +10,10 @@
 
 ## Demo video
 
+https://github.com/user-attachments/assets/146d9280-a3a4-4027-9b12-60deaf5e455f
+
+
+
 <br>
 
 ## 팀 멤버
