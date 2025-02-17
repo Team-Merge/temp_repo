@@ -102,7 +102,6 @@
 <br>
 
 ## 코드 사용 방법
-1. 테스트
 아래 두 코드를 다운로드
 <br>
 [FrontEnd](https://github.com/Team-Merge/jigu_travel_fe)
@@ -111,6 +110,10 @@
 <br>
 
 1. frontend 사용 방법
+   1.  dev로 구동
+   ```
+   npm run dev
+   ```
 
 
 2. fastapi 사용 방법
