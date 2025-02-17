@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/1a4ec03a-8b86-4a75-ae9a-6e7ae66acb04)# 당신을 위한 여행친구 [지구여행]
+# 당신을 위한 여행친구 [지구여행]
 
 [![Since](https://img.shields.io/badge/since-2025.01.02-333333.svg)](https://github.com/Team-Merge/jigu_travel)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/Team-Merge/jigu_travel/blob/develop/LICENSE)
